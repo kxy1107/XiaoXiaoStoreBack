@@ -27,16 +27,26 @@ export default {
   display: flex;
   flex-direction: column;
   height: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .contain {
   display: flex;
   height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 .main-content{
   padding: 10px;
   height: 100%;
   width: 100%;
   box-sizing: border-box;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
+
+@import url("/static/common.css");
 </style>
