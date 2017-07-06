@@ -1,16 +1,16 @@
 <template>
         <el-row class="menu">
             <el-col >
-                <el-menu default-active="/UserInfo" unique-opened  router class="el-menu-vertical-demo">
+                <el-menu  unique-opened  router class="el-menu-vertical-demo">
                     <el-submenu index="1">
                         <template slot="title">用户管理</template>
-                            <el-menu-item index="/UserInfo">用户列表</el-menu-item>
+                            <el-menu-item index="/">用户列表</el-menu-item>
                     </el-submenu>
                      <el-submenu index="2">
                         <template slot="title">商品管理</template>
                             <el-menu-item index="/BrandMenagement" >品牌管理</el-menu-item>
-                            <el-menu-item index="/" >首页轮播管理</el-menu-item>
-                            <el-menu-item index="2-2">选项2</el-menu-item>
+                            <el-menu-item index="/TypeMenagement" >类型管理</el-menu-item>
+                            <el-menu-item index="/SubTypeMenagement">子类型管理</el-menu-item>
                     </el-submenu>
                     <el-menu-item index="3">导航三</el-menu-item>
                 </el-menu>

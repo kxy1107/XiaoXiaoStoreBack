@@ -9,7 +9,7 @@
         <!--顶部搜索-->
         <el-form :inline="true" class="top-form">
             <el-form-item>
-                <el-button type="primary" @click="dialogFormVisible = true">添加新品牌</el-button>
+                <el-button type="primary" @click="dialogAddBrand = true">添加新品牌</el-button>
             </el-form-item>
             <el-form-item>
                 <el-input v-model="inputBrandName" placeholder="请输入品牌名"></el-input>
@@ -19,33 +19,33 @@
             </el-form-item>
         </el-form>
         <!--表格-->
-        <el-table :data="userInfoData" class="my-table" height="100">
+        <el-table :data="brandList" class="my-table" height="100">
             <el-table-column label="操作" width="200">
                 <template scope="scope">
                     <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
                     <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
                 </template>
             </el-table-column>
-            <el-table-column prop="userName" label="商品ID">
+            <el-table-column prop="brandID" label="品牌ID">
             </el-table-column>
-            <el-table-column prop="userSex" label="商品名称">
+            <el-table-column prop="brandName" label="品牌名称">
             </el-table-column>
         </el-table>
         <!--底部分页-->
         <div class="pagination">
-            <el-pagination @current-change="handleCurrentChange" :current-page="1" :page-size="10" layout="total, prev, pager, next, jumper" :total="400">
+            <el-pagination @current-change="handleCurrentChange" :current-page="1" :page-size="10" layout="total, prev, pager, next, jumper" :total="brandList.length">
             </el-pagination>
         </div>
     
         <!--添加品牌弹窗-->
-        <el-dialog title='添加品牌' :visible.sync="dialogFormVisible">
+        <el-dialog title='添加品牌' :visible.sync="dialogAddBrand">
             <el-form>
                 <el-form-item label="品牌名称">
                     <el-input v-model="addBrandName" auto-complete="off"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="dialogFormVisible = false">取 消</el-button>
+                <el-button @click="dialogAddBrand = false">取 消</el-button>
                 <el-button type="primary" @click="addBrandConfirm">确 定</el-button>
             </div>
         </el-dialog>
@@ -78,121 +78,37 @@ export default {
 
             addBrandName: "",//弹窗输入的品牌名
             inputBrandName: "",//搜索输入的品牌名
-            dialogFormVisible: false,//是否显示弹窗
+            dialogAddBrand: false,//是否显示弹窗
             isUpdateBrand:false,//是否是修改状态
-            updateBrandID:"",
-            updateBrandName:"",
-            userInfoData: [
+            updateBrandID:"",//修改品牌的ID
+            updateBrandName:"",//修改品牌的名称
+            brandList: [
                 {
-                    userName: "小王",
-                    userImg: "",
-                    userSex: "男",
-                    userRegisterTime: "2017-6-27",
+                    brandID: "111",
+                    brandName: "耐克",
                 },
-                {
-                    userName: "小王",
-                    userImg: "",
-                    userSex: "男",
-                    userRegisterTime: "2017-6-27",
+                 {
+                    brandID: "112",
+                    brandName: "特步",
                 },
-                {
-                    userName: "小王",
-                    userImg: "",
-                    userSex: "男",
-                    userRegisterTime: "2017-6-27",
+                 {
+                    brandID: "113",
+                    brandName: "阿迪达斯",
                 },
-                {
-                    userName: "小王",
-                    userImg: "",
-                    userSex: "男",
-                    userRegisterTime: "2017-6-27",
+                 {
+                    brandID: "114",
+                    brandName: "安踏",
                 },
-                {
-                    userName: "小王",
-                    userImg: "",
-                    userSex: "男",
-                    userRegisterTime: "2017-6-27",
+                 {
+                    brandID: "115",
+                    brandName: "乔丹",
                 },
-                {
-                    userName: "小王",
-                    userImg: "",
-                    userSex: "男",
-                    userRegisterTime: "2017-6-27",
-                },
-                {
-                    userName: "小王",
-                    userImg: "",
-                    userSex: "男",
-                    userRegisterTime: "2017-6-27",
-                },
-                {
-                    userName: "小王",
-                    userImg: "",
-                    userSex: "男",
-                    userRegisterTime: "2017-6-27",
-                },
-                {
-                    userName: "小王",
-                    userImg: "",
-                    userSex: "男",
-                    userRegisterTime: "2017-6-27",
-                },
-                {
-                    userName: "小王",
-                    userImg: "",
-                    userSex: "男",
-                    userRegisterTime: "2017-6-27",
-                },
-                {
-                    userName: "小王",
-                    userImg: "",
-                    userSex: "男",
-                    userRegisterTime: "2017-6-27",
-                },
-                {
-                    userName: "小王",
-                    userImg: "",
-                    userSex: "男",
-                    userRegisterTime: "2017-6-27",
-                },
-                {
-                    userName: "小王",
-                    userImg: "",
-                    userSex: "男",
-                    userRegisterTime: "2017-6-27",
-                },
-                {
-                    userName: "小王",
-                    userImg: "",
-                    userSex: "男",
-                    userRegisterTime: "2017-6-27",
-                },
-                {
-                    userName: "小王",
-                    userImg: "",
-                    userSex: "男",
-                    userRegisterTime: "2017-6-27",
-                },
-                {
-                    userName: "小王",
-                    userImg: "",
-                    userSex: "男",
-                    userRegisterTime: "2017-6-27",
-                },
-                {
-                    userName: "小王",
-                    userImg: "",
-                    userSex: "男",
-                    userRegisterTime: "2017-6-27",
-                },
-                {
-                    userName: "小王",
-                    userImg: "",
-                    userSex: "男",
-                    userRegisterTime: "2017-6-27",
-                },
+               
             ]
         }
+    },
+    mounted:function(){
+        this.getBrandList()
     },
     methods: {
         //点击查询
@@ -205,15 +121,14 @@ export default {
         //点击编辑
         handleEdit(index, row) {
             this.isUpdateBrand = true;
-            this.updateBrandID = row.userRegisterTime,
-            this.updateBrandName = row.userName,
-            console.log(index, row);
-            console.log(row.userName);
+            this.updateBrandID = row.brandID,
+            this.updateBrandName = row.brandName
+          
         },
         //点击删除
         handleDelete(index, row) {
             console.log(index, row);
-             this.$confirm('确认删除品牌【' + row.userName + '】?', '提示', {
+             this.$confirm('确认删除品牌【' + row.brandName + '】?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
@@ -235,13 +150,24 @@ export default {
 
         //添加品牌弹窗确认按钮
         addBrandConfirm() {
-            this.dialogFormVisible = false;
+            this.dialogAddBrand = false;
         },
         //修改品牌弹窗确认按钮
         updateBrandConfirm(){
              this.isUpdateBrand = false;
         },
 
+        getBrandList(){
+            let url =  'localhost:8081/getBrandList';
+            let data = {
+                userNo:"111",
+            };
+            this.$http.get(url,data).then(function(successRes){
+
+            },function(failRes){
+
+            });
+        },
 
     }
 }

@@ -9,26 +9,26 @@
         <!--顶部搜索-->
         <el-form :inline="true" class="top-form">
             <el-form-item>
-                <el-button type="primary" @click="dialogFormVisible = true">添加新类型</el-button>
+                <el-button type="primary" @click="dialogAddType = true">添加新类型</el-button>
             </el-form-item>
             <el-form-item>
-                <el-input v-model="inputBrandName" placeholder="请输入类型名"></el-input>
+                <el-input v-model="inputTypeName" placeholder="请输入类型名"></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="onClickSearch">查询</el-button>
             </el-form-item>
         </el-form>
         <!--表格-->
-        <el-table :data="userInfoData" class="my-table" height="100">
+        <el-table :data="typeList" class="my-table" height="100">
             <el-table-column label="操作" width="200">
                 <template scope="scope">
                     <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
                     <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
                 </template>
             </el-table-column>
-            <el-table-column prop="userName" label="商品ID">
+            <el-table-column prop="typeID" label="类型ID">
             </el-table-column>
-            <el-table-column prop="userSex" label="商品名称">
+            <el-table-column prop="typeName" label="类型名称">
             </el-table-column>
         </el-table>
         <!--底部分页-->
@@ -46,37 +46,25 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogAddType = false">取 消</el-button>
-                <el-button type="primary" @click="addBrandConfirm">确 定</el-button>
+                <el-button type="primary" @click="addTypeConfirm">确 定</el-button>
             </div>
         </el-dialog>
 
-        
-        <!--添加子类型弹窗-->
-        <el-dialog title='添加子类型' :visible.sync="dialogAddSubType">
-            <el-form>
-                <el-form-item label="子类型名称">
-                    <el-input v-model="addSubTypeName" auto-complete="off"></el-input>
-                </el-form-item>
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click="dialogAddSubType = false">取 消</el-button>
-                <el-button type="primary" @click="addBrandConfirm">确 定</el-button>
-            </div>
-        </el-dialog>
+      
 
            <!--修改品牌弹窗-->
-        <el-dialog title='修改品牌' :visible.sync="isUpdateBrand">
+        <el-dialog title='修改类型' :visible.sync="isUpdateType">
             <el-form>
-                 <el-form-item label="品牌ID">
-                   <div>{{updateBrandID}}</div>
+                 <el-form-item label="类型ID">
+                   <div>{{updateTypeID}}</div>
                 </el-form-item>
-                <el-form-item label="品牌名称">
-                    <el-input v-model="updateBrandName" auto-complete="off"></el-input>
+                <el-form-item label="类型名称">
+                    <el-input v-model="updateTypeName" auto-complete="off"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="isUpdateBrand = false">取 消</el-button>
-                <el-button type="primary" @click="updateBrandConfirm">确 定</el-button>
+                <el-button @click="isUpdateType = false">取 消</el-button>
+                <el-button type="primary" @click="updateTypeConfirm">确 定</el-button>
             </div>
         </el-dialog>
     
@@ -90,121 +78,22 @@ export default {
     data() {
         return {
 
-            addBrandName: "",//弹窗输入的品牌名
-            inputBrandName: "",//搜索输入的品牌名
+            addTypeName: "",//弹窗输入的类型名
+            inputTypeName: "",//搜索输入的类型名
             dialogAddType: false,//是否显示类型弹窗
-            dialogAddSubType: false,//是否显示子类型弹窗
-            isUpdateBrand:false,//是否是修改状态
-            updateBrandID:"",
-            updateBrandName:"",
-            userInfoData: [
+            isUpdateType:false,//是否是修改状态弹窗
+            updateTypeID:"",
+            updateTypeName:"",
+            typeList: [
                 {
-                    userName: "小王",
-                    userImg: "",
-                    userSex: "男",
-                    userRegisterTime: "2017-6-27",
+                    typeID: "111",
+                    typeName: "衣服",
+                   
                 },
-                {
-                    userName: "小王",
-                    userImg: "",
-                    userSex: "男",
-                    userRegisterTime: "2017-6-27",
-                },
-                {
-                    userName: "小王",
-                    userImg: "",
-                    userSex: "男",
-                    userRegisterTime: "2017-6-27",
-                },
-                {
-                    userName: "小王",
-                    userImg: "",
-                    userSex: "男",
-                    userRegisterTime: "2017-6-27",
-                },
-                {
-                    userName: "小王",
-                    userImg: "",
-                    userSex: "男",
-                    userRegisterTime: "2017-6-27",
-                },
-                {
-                    userName: "小王",
-                    userImg: "",
-                    userSex: "男",
-                    userRegisterTime: "2017-6-27",
-                },
-                {
-                    userName: "小王",
-                    userImg: "",
-                    userSex: "男",
-                    userRegisterTime: "2017-6-27",
-                },
-                {
-                    userName: "小王",
-                    userImg: "",
-                    userSex: "男",
-                    userRegisterTime: "2017-6-27",
-                },
-                {
-                    userName: "小王",
-                    userImg: "",
-                    userSex: "男",
-                    userRegisterTime: "2017-6-27",
-                },
-                {
-                    userName: "小王",
-                    userImg: "",
-                    userSex: "男",
-                    userRegisterTime: "2017-6-27",
-                },
-                {
-                    userName: "小王",
-                    userImg: "",
-                    userSex: "男",
-                    userRegisterTime: "2017-6-27",
-                },
-                {
-                    userName: "小王",
-                    userImg: "",
-                    userSex: "男",
-                    userRegisterTime: "2017-6-27",
-                },
-                {
-                    userName: "小王",
-                    userImg: "",
-                    userSex: "男",
-                    userRegisterTime: "2017-6-27",
-                },
-                {
-                    userName: "小王",
-                    userImg: "",
-                    userSex: "男",
-                    userRegisterTime: "2017-6-27",
-                },
-                {
-                    userName: "小王",
-                    userImg: "",
-                    userSex: "男",
-                    userRegisterTime: "2017-6-27",
-                },
-                {
-                    userName: "小王",
-                    userImg: "",
-                    userSex: "男",
-                    userRegisterTime: "2017-6-27",
-                },
-                {
-                    userName: "小王",
-                    userImg: "",
-                    userSex: "男",
-                    userRegisterTime: "2017-6-27",
-                },
-                {
-                    userName: "小王",
-                    userImg: "",
-                    userSex: "男",
-                    userRegisterTime: "2017-6-27",
+               {
+                    typeID: "111",
+                    typeName: "衣服",
+                   
                 },
             ]
         }
@@ -219,16 +108,16 @@ export default {
         },
         //点击编辑
         handleEdit(index, row) {
-            this.isUpdateBrand = true;
-            this.updateBrandID = row.userRegisterTime,
-            this.updateBrandName = row.userName,
+            this.isUpdateType = true;
+            this.updateTypeID = row.typeID,
+            this.updateTypeName = row.typeName,
             console.log(index, row);
             console.log(row.userName);
         },
         //点击删除
         handleDelete(index, row) {
             console.log(index, row);
-             this.$confirm('确认删除品牌【' + row.userName + '】?', '提示', {
+             this.$confirm('确认删除类型【' + row.typeName + '】?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
@@ -249,12 +138,12 @@ export default {
        
 
         //添加品牌弹窗确认按钮
-        addBrandConfirm() {
-            this.dialogFormVisible = false;
+        addTypeConfirm() {
+            this.dialogAddType = false;
         },
         //修改品牌弹窗确认按钮
-        updateBrandConfirm(){
-             this.isUpdateBrand = false;
+        updateTypeConfirm(){
+             this.isUpdateType = false;
         },
 
 
