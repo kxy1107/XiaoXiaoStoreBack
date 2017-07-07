@@ -70,7 +70,7 @@
 </template>
 
 <script>
-
+import serverAddress from '@/root.js'
 export default {
     name: 'UserInfo',
     data() {
@@ -158,11 +158,11 @@ export default {
         },
 
         getBrandList(){
-            let url =  'localhost:8081/getBrandList';
+            let url =  serverAddress.rootPath + '/getBrandList';
             let data = {
-                userNo:"111",
+                userNo:"111"
             };
-            this.$http.get(url,data).then(function(successRes){
+            this.$http.get(url,{params:data}).then(function(successRes){
 
             },function(failRes){
 
