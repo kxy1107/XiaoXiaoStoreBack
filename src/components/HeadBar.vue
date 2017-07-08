@@ -3,13 +3,17 @@
       <img src="../assets/logo.png" alt="logo" class="header-logo">
       <div class="header-operations">
         <span >老王</span>
-        <span class="exit-sys">退出系统</span>
+        <span class="exit-sys" @click="exitLogin">退出系统</span>
       </div>
       </header>
 </template>
 <script>
   export default {
-    
+    methods:{
+      exitLogin(){
+        this.$router.push({ path: '/Login' });
+      }
+    }
   };
 </script>
 <style>

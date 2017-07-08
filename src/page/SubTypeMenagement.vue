@@ -1,4 +1,8 @@
 <template>
+    <div class="app">
+        <HeadBar></HeadBar>
+        <div class="contain">
+            <NavMenu></NavMenu>
     <div class="main-content">
         <!--顶部面包屑导航-->
         <el-breadcrumb separator="/" class="breadcrumb">
@@ -44,7 +48,7 @@
         <!--添加子类型弹窗-->
         <el-dialog title='添加子类型' :visible.sync="dialogAddSubType">
             <el-form>
-                <el-form-item label="请选择上级类型" :label-width="formLabelWidth">
+                <el-form-item label="请选择上级类型" >
                     <el-select v-model="selectType" placeholder="请选择">
                         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                         </el-option>
@@ -63,7 +67,7 @@
         <!--修改品牌弹窗-->
         <el-dialog title='修改子类型' :visible.sync="isUpdateSubType">
             <el-form>
-                 <el-form-item label="请选择上级类型" :label-width="formLabelWidth">
+                 <el-form-item label="请选择上级类型" >
                     <el-select v-model="selectType" placeholder="请选择">
                         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                         </el-option>
@@ -83,12 +87,19 @@
         </el-dialog>
     
     </div>
+         </div>
+    </div>
 </template>
 
 <script>
-
+import HeadBar from '@/components/HeadBar'
+import NavMenu from '@/components/NavMenu'
 export default {
     name: 'UserInfo',
+      components: {
+    HeadBar,
+    NavMenu
+  },
     data() {
         return {
 

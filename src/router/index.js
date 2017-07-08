@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import Login from '@/page/Login'
 import UserInfo from '@/page/UserInfo'
 import BrandMenagement from '@/page/BrandMenagement'
 import TypeMenagement from '@/page/TypeMenagement'
@@ -9,9 +10,13 @@ Vue.use(Router)
 
 export default new Router({
   routes: [
- 
+  {
+      path: '/Login',
+      name: 'Login',
+      component: Login
+    },
      {
-      path: '/',
+      path: '/UserInfo',
       name: 'UserInfo',
       component: UserInfo
     },

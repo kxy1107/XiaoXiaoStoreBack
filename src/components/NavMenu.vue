@@ -1,10 +1,10 @@
 <template>
         <el-row class="menu">
             <el-col >
-                <el-menu  unique-opened  router class="el-menu-vertical-demo">
+                <el-menu  :default-active="$route.path"  unique-opened  router class="el-menu-vertical-demo">
                     <el-submenu index="1">
                         <template slot="title">用户管理</template>
-                            <el-menu-item index="/">用户列表</el-menu-item>
+                            <el-menu-item index="/UserInfo">用户列表</el-menu-item>
                     </el-submenu>
                      <el-submenu index="2">
                         <template slot="title">商品管理</template>
@@ -19,7 +19,7 @@
 </template>
 <script>
 export default {
-  name:'NavMenu'
+  name:'NavMenu',
 }
 </script>
 <style scoped>

@@ -1,57 +1,68 @@
 <template>
-  <div class="main-content">
-    <!--顶部面包屑导航-->
-    <el-breadcrumb separator="/" class="breadcrumb">
-      <el-breadcrumb-item>用户管理</el-breadcrumb-item>
-      <el-breadcrumb-item>用户列表</el-breadcrumb-item>
-    </el-breadcrumb>
+  <div class="app">
+    <HeadBar></HeadBar>
+    <div class="contain">
+      <NavMenu></NavMenu>
+      <div class="main-content">
+        <!--顶部面包屑导航-->
+        <el-breadcrumb separator="/" class="breadcrumb">
+          <el-breadcrumb-item>用户管理</el-breadcrumb-item>
+          <el-breadcrumb-item>用户列表</el-breadcrumb-item>
+        </el-breadcrumb>
   
-    <!--顶部搜索-->
-    <el-form :inline="true" :model="formUserInfo" class="top-form">
-      <el-form-item>
-        <el-input v-model="formUserInfo.userName" placeholder="请输入用户名"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="onClickSearch">查询</el-button>
-      </el-form-item>
-    </el-form>
-    <!--表格-->
-    <el-table :data="userInfoData" class="my-table" height="100">
-
-      <el-table-column prop="userName" label="姓名">
-      </el-table-column>
-
-      <el-table-column prop="userSex" label="性别">
-      </el-table-column>
-
-      <el-table-column label="头像">
-        <template scope="scope">
-          <img class="headImg" :src="scope.row.userImg">
-        </template>
-      </el-table-column>
+        <!--顶部搜索-->
+        <el-form :inline="true" :model="formUserInfo" class="top-form">
+          <el-form-item>
+            <el-input v-model="formUserInfo.userName" placeholder="请输入用户名"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="onClickSearch">查询</el-button>
+          </el-form-item>
+        </el-form>
+        <!--表格-->
+        <el-table :data="userInfoData" class="my-table" height="100">
   
-      <el-table-column prop="UserCity" label="城市">
-      </el-table-column>
-
-      <el-table-column prop="userRegisterTime" label="注册时间">
-      </el-table-column>
-
-      <el-table-column prop="LastLoginTime" label="最后登录时间">
-      </el-table-column>
-    </el-table>
-    <!--底部分页-->
-    <div class="pagination">
-      <el-pagination @current-change="handleCurrentChange" :current-page="1" :page-size="10" layout="total, prev, pager, next, jumper" :total="400">
-      </el-pagination>
+          <el-table-column prop="userName" label="姓名">
+          </el-table-column>
+  
+          <el-table-column prop="userSex" label="性别">
+          </el-table-column>
+  
+          <el-table-column label="头像">
+            <template scope="scope">
+              <img class="headImg" :src="scope.row.userImg">
+            </template>
+          </el-table-column>
+  
+          <el-table-column prop="UserCity" label="城市">
+          </el-table-column>
+  
+          <el-table-column prop="userRegisterTime" label="注册时间">
+          </el-table-column>
+  
+          <el-table-column prop="LastLoginTime" label="最后登录时间">
+          </el-table-column>
+        </el-table>
+        <!--底部分页-->
+        <div class="pagination">
+          <el-pagination @current-change="handleCurrentChange" :current-page="1" :page-size="10" layout="total, prev, pager, next, jumper" :total="400">
+          </el-pagination>
+        </div>
+  
+      </div>
     </div>
-  
   </div>
 </template>
 
 <script>
-
+import HeadBar from '@/components/HeadBar'
+import NavMenu from '@/components/NavMenu'
 export default {
   name: 'UserInfo',
+  components: {
+    HeadBar,
+    NavMenu
+  },
   data() {
     return {
       formUserInfo: {
