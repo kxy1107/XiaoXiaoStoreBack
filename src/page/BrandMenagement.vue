@@ -37,7 +37,7 @@
                 </el-table>
                 <!--底部分页-->
                 <div class="pagination">
-                    <el-pagination @current-change="handleCurrentChange" :current-page="1" :page-size="10" layout="total, prev, pager, next, jumper" :total="brandList.length">
+                    <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="10" layout="total, prev, pager, next, jumper" :total="brandList.length">
                     </el-pagination>
                 </div>
     
@@ -75,9 +75,11 @@
 </template>
 
 <script>
-import serverAddress from '@/root.js'
+import extend from '@/extend.js'
 import HeadBar from '@/components/HeadBar'
 import NavMenu from '@/components/NavMenu'
+let userNo;
+
 export default {
     name: 'UserInfo',
     components: {
@@ -86,39 +88,20 @@ export default {
     },
     data() {
         return {
-
-            addBrandName: "",//弹窗输入的品牌名
+            currentPage: 1,
+            pageIndex: 0,
+            pageSize: 10,
             inputBrandName: "",//搜索输入的品牌名
+            addBrandName: "",//弹窗输入的品牌名
             dialogAddBrand: false,//是否显示弹窗
             isUpdateBrand: false,//是否是修改状态
             updateBrandID: "",//修改品牌的ID
             updateBrandName: "",//修改品牌的名称
-            brandList: [
-                {
-                    brandID: "111",
-                    brandName: "耐克",
-                },
-                {
-                    brandID: "112",
-                    brandName: "特步",
-                },
-                {
-                    brandID: "113",
-                    brandName: "阿迪达斯",
-                },
-                {
-                    brandID: "114",
-                    brandName: "安踏",
-                },
-                {
-                    brandID: "115",
-                    brandName: "乔丹",
-                },
-
-            ]
+            brandList: [],//品牌列表
         }
     },
     mounted: function () {
+        userNo = JSON.parse(sessionStorage.getItem('userInfo')).UserNo;
         this.getBrandList()
     },
     methods: {
@@ -126,8 +109,8 @@ export default {
         onClickSearch() {
 
         },
-        handleCurrentChange() {
-
+        handleCurrentChange(val) {
+            this.pageIndex = (this.currentPage - 1) * this.pageSize;
         },
         //点击编辑
         handleEdit(index, row) {
@@ -138,16 +121,31 @@ export default {
         },
         //点击删除
         handleDelete(index, row) {
+            let self = this;
             console.log(index, row);
             this.$confirm('确认删除品牌【' + row.brandName + '】?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                this.$message({
-                    type: 'success',
-                    message: '删除成功!'
+
+                let url = extend.rootPath + '/delBrand';
+                let data = {
+                    UserNo: userNo,
+                    BrandID: row.brandID,
+                };
+                self.$http.get(url, { params: data }).then(function (successRes) {
+                    if (successRes.data.Code == 1) {
+                        this.$message({
+                            type: 'success',
+                            message: '删除成功',
+
+                        });
+                        self.getBrandList();
+                    }
+                }, function (failRes) {
                 });
+
             }).catch(() => {
                 this.$message({
                     type: 'info',
@@ -161,19 +159,70 @@ export default {
 
         //添加品牌弹窗确认按钮
         addBrandConfirm() {
-            this.dialogAddBrand = false;
+            let self = this;
+            let url = extend.rootPath + '/addBrand';
+            let data = {
+                UserNo: userNo,
+                BrandID: '',
+                BrandName: this.addBrandName
+
+            };
+            self.$http.get(url, { params: data }).then(function (successRes) {
+                if (successRes.data.Code == 1) {
+                    this.$message({
+                        type: 'success',
+                        message: '添加成功',
+
+                    });
+                    self.dialogAddBrand = false;
+                    self.getBrandList();
+                }
+
+            }, function (failRes) {
+
+            });
         },
         //修改品牌弹窗确认按钮
         updateBrandConfirm() {
-            this.isUpdateBrand = false;
+            let self = this;
+            let url = extend.rootPath + '/addBrand';
+            let data = {
+                UserNo: userNo,
+                BrandID: self.updateBrandID,
+                BrandName: self.updateBrandName
+
+            };
+            self.$http.get(url, { params: data }).then(function (successRes) {
+                if (successRes.data.Code == 1) {
+                    this.$message({
+                        type: 'success',
+                        message: '修改成功',
+
+                    });
+                    this.isUpdateBrand = false;
+                    self.getBrandList();
+                }
+
+            }, function (failRes) {
+
+            });
         },
 
+        //获取品牌列表
         getBrandList() {
-            let url = serverAddress.rootPath + '/getBrandList';
+            let self = this;
+            let url = extend.rootPath + '/getBrandList';
             let data = {
-                userNo: "111"
+                UserNo: userNo,
+                BrandName: this.inputBrandName,
+                PageIndex: this.pageIndex,
+                PageSize: this.pageSize
+
             };
-            this.$http.get(url, { params: data }).then(function (successRes) {
+            self.$http.get(url, { params: data }).then(function (successRes) {
+                if (successRes.data.Code == 1) {
+                    self.brandList = successRes.data.BrandList;
+                }
 
             }, function (failRes) {
 

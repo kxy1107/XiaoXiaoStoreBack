@@ -20,18 +20,84 @@
     </el-form>
 </template>
 <script>
+import extend from '@/extend.js'
 export default {
     name: 'Login',
     data() {
         return {
+            userName:'',
+            userPassword:'',
             checked: true,
             logining: false,
         }
     },
     methods: {
+        //点击登陆
         toLogin() {
-            this.$router.push({ path: '/UserInfo' });
+            let self = this;
+       
+            if(self.checkInfo()){
+                 let url = extend.rootPath + '/login';
+                    let data = {
+                        Phone: self.userName,
+                        Password:self.userPassword
+                    };
+                    this.$http.get(url, { params: data }).then(function (successRes) {
+                        if(successRes.data.Code == 1){
+                            self.isRemember();
+                            let userInfo =  JSON.stringify(successRes.data.UserInfo);
+                            sessionStorage.setItem("userInfo", userInfo);	
+                            this.$router.push({ path: '/UserInfo' });
+                        }
+                       
+                    }, function (failRes) {
+
+                    });
+            }
+
+
+           
         },
+        //校验账号密码
+        checkInfo(){
+          if(this.userName.replace(/(^s*)|(s*$)/g, "").length == 0){
+              this.$message({
+                message: '账号不能为空！',
+                duration:1500,
+                type: 'error'
+                });
+              return false;
+          }else if(this.userPassword.replace(/(^s*)|(s*$)/g, "").length == 0) {
+                this.$message({
+                message: '密码不能为空！',
+                 duration:1500,
+                type: 'error'
+                });
+              return false;
+          }
+          return true;
+        },
+
+        //是否记住密码
+        isRemember(){
+            if(this.checked){
+                extend.setCookie('UserName',this.userName,3);
+                extend.setCookie('UserPassword',this.userPassword,3);
+            }else{
+                extend.delCookie('UserName');
+                 extend.delCookie('UserPassword');
+            }
+        },
+    },
+
+    //页面加载完
+    mounted(){
+        let userName = extend.getCookie('UserName') ;
+        let pwd = extend.getCookie('UserPassword') ;
+        if(userName != null && pwd != null){
+            this.userName = userName;
+            this.userPassword = pwd;
+        }
     }
 }
 </script>
