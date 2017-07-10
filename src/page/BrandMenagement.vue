@@ -107,7 +107,7 @@ export default {
     methods: {
         //点击查询
         onClickSearch() {
-
+            this.getBrandList()
         },
         handleCurrentChange(val) {
             this.pageIndex = (this.currentPage - 1) * this.pageSize;
@@ -115,8 +115,8 @@ export default {
         //点击编辑
         handleEdit(index, row) {
             this.isUpdateBrand = true;
-            this.updateBrandID = row.brandID,
-                this.updateBrandName = row.brandName
+            this.updateBrandID = row.brandID;
+            this.updateBrandName = row.brandName;
 
         },
         //点击删除

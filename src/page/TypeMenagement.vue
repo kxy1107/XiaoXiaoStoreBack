@@ -37,7 +37,7 @@
                 </el-table>
                 <!--底部分页-->
                 <div class="pagination">
-                    <el-pagination @current-change="handleCurrentChange" :current-page="1" :page-size="10" layout="total, prev, pager, next, jumper" :total="400">
+                    <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="10" layout="total, prev, pager, next, jumper" :total="400">
                     </el-pagination>
                 </div>
     
@@ -78,6 +78,8 @@
 <script>
 import HeadBar from '@/components/HeadBar'
 import NavMenu from '@/components/NavMenu'
+import extend from '@/extend.js'
+let userNo;
 export default {
     name: 'UserInfo',
     components: {
@@ -86,55 +88,65 @@ export default {
     },
     data() {
         return {
-
+            currentPage: 1,
+            pageIndex: 0,
+            pageSize: 10,
             addTypeName: "",//弹窗输入的类型名
             inputTypeName: "",//搜索输入的类型名
             dialogAddType: false,//是否显示类型弹窗
             isUpdateType: false,//是否是修改状态弹窗
             updateTypeID: "",
             updateTypeName: "",
-            typeList: [
-                {
-                    typeID: "111",
-                    typeName: "衣服",
-
-                },
-                {
-                    typeID: "111",
-                    typeName: "衣服",
-
-                },
-            ]
+            typeList: []
         }
+    },
+    mounted: function () {
+        userNo = JSON.parse(sessionStorage.getItem('userInfo')).UserNo;
+        this.getTypeList();
     },
     methods: {
         //点击查询
         onClickSearch() {
-
+            this.getTypeList();
         },
         handleCurrentChange() {
-
+            this.pageIndex = (this.currentPage - 1) * this.pageSize;
         },
         //点击编辑
         handleEdit(index, row) {
+
             this.isUpdateType = true;
-            this.updateTypeID = row.typeID,
-                this.updateTypeName = row.typeName,
-                console.log(index, row);
-            console.log(row.userName);
+            this.updateTypeID = row.typeID;
+            this.updateTypeName = row.typeName;
+
         },
         //点击删除
         handleDelete(index, row) {
+            let self = this;
             console.log(index, row);
-            this.$confirm('确认删除类型【' + row.typeName + '】?', '提示', {
+            this.$confirm('确认删除类型【' + row.typeName + '】以及它的所有子类型?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                this.$message({
-                    type: 'success',
-                    message: '删除成功!'
+
+                let url = extend.rootPath + '/delType';
+                let data = {
+                    UserNo: userNo,
+                    TypeID: row.typeID,
+                };
+                self.$http.get(url, { params: data }).then(function (successRes) {
+                    if (successRes.data.Code == 1) {
+                        this.$message({
+                            type: 'success',
+                            message: '删除成功',
+
+                        });
+                        self.getTypeList();
+                    }
+                }, function (failRes) {
                 });
+
             }).catch(() => {
                 this.$message({
                     type: 'info',
@@ -148,15 +160,82 @@ export default {
 
         //添加品牌弹窗确认按钮
         addTypeConfirm() {
-            this.dialogAddType = false;
+            let self = this;
+            let url = extend.rootPath + '/addType';
+            let data = {
+                UserNo: userNo,
+                TypeID: '',
+                TypeName: this.addTypeName
+
+            };
+            self.$http.get(url, { params: data }).then(function (successRes) {
+                if (successRes.data.Code == 1) {
+                    this.$message({
+                        type: 'success',
+                        message: '添加成功',
+
+                    });
+                    this.dialogAddType = false;
+                    self.getTypeList();
+                }
+
+            }, function (failRes) {
+
+            });
+
         },
         //修改品牌弹窗确认按钮
         updateTypeConfirm() {
-            this.isUpdateType = false;
+            let self = this;
+            let url = extend.rootPath + '/addType';
+            let data = {
+                UserNo: userNo,
+                TypeID: self.updateTypeID,
+                TypeName: self.updateTypeName
+
+            };
+            self.$http.get(url, { params: data }).then(function (successRes) {
+                if (successRes.data.Code == 1) {
+                    this.$message({
+                        type: 'success',
+                        message: '修改成功',
+
+                    });
+                    this.isUpdateType = false;
+                    self.getTypeList();
+                }
+
+            }, function (failRes) {
+
+            });
+
+        },
+
+        //获取类型列表
+        getTypeList() {
+            let self = this;
+            let url = extend.rootPath + '/getTypeList';
+            let data = {
+                UserNo: userNo,
+                TypeName: this.inputTypeName,
+                PageIndex: this.pageIndex,
+                PageSize: this.pageSize
+
+            };
+            self.$http.get(url, { params: data }).then(function (successRes) {
+                if (successRes.data.Code == 1) {
+                    self.typeList = successRes.data.TypeList;
+                }
+
+            }, function (failRes) {
+
+            });
         },
 
 
-    }
+
+    },
+
 }
 </script>
 
