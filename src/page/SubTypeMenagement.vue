@@ -97,7 +97,7 @@ import NavMenu from '@/components/NavMenu'
 import extend from '@/extend.js'
 let userNo;
 export default {
-    name: 'UserInfo',
+    name: 'SubTypeMenagement',
     components: {
         HeadBar,
         NavMenu

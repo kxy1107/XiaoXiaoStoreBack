@@ -81,7 +81,7 @@ import NavMenu from '@/components/NavMenu'
 let userNo;
 
 export default {
-    name: 'UserInfo',
+    name: 'BrandMenagement',
     components: {
         HeadBar,
         NavMenu
