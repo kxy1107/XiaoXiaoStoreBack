@@ -16,7 +16,7 @@
                         <el-button type="primary" @click="dialogAddAttributeValue = true">添加新属性值</el-button>
                     </el-form-item>
                     <el-form-item>
-                        <el-input v-model="inputAttributeValueName" placeholder="请输入属性值名"></el-input>
+                        <el-input v-model="inputAttributeValue" placeholder="请输入属性值名"></el-input>
                     </el-form-item>
                     <el-form-item>
                         <el-button type="primary" @click="onClickSearch">查询</el-button>
@@ -36,12 +36,12 @@
                     </el-table-column>
                     <el-table-column prop="attributeValueID" label="属性值ID">
                     </el-table-column>
-                    <el-table-column prop="attributeValueName" label="属性值">
+                    <el-table-column prop="attributeValue" label="属性值">
                     </el-table-column>
                 </el-table>
                 <!--底部分页-->
                 <div class="pagination">
-                    <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="10" layout="total, prev, pager, next, jumper" :total="400">
+                    <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="10" layout="total, prev, pager, next, jumper" :total="totalCount">
                     </el-pagination>
                 </div>
     
@@ -55,7 +55,7 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item label="属性值">
-                            <el-input v-model="addAttributeValueName" auto-complete="off"></el-input>
+                            <el-input v-model="addAttributeValue" auto-complete="off"></el-input>
                         </el-form-item>
                     </el-form>
                     <div slot="footer" class="dialog-footer">
@@ -77,7 +77,7 @@
                             <div>{{updateAttributeValueID}}</div>
                         </el-form-item>
                         <el-form-item label="属性值">
-                            <el-input v-model="updateAttributeValueName" auto-complete="off"></el-input>
+                            <el-input v-model="updateAttributeValue" auto-complete="off"></el-input>
                         </el-form-item>
                     </el-form>
                     <div slot="footer" class="dialog-footer">
@@ -107,20 +107,15 @@ export default {
             currentPage: 1,
             pageIndex: 0,
             pageSize: 10,
-            addAttributeValueName: "",//弹窗输入的子类型
-            inputAttributeValueName: "",//搜索输入的子类型
+            addAttributeValue: "",//弹窗输入的子类型
+            inputAttributeValue: "",//搜索输入的子类型
             dialogAddAttributeValue: false,//是否显示子类型弹窗
             isUpdateAttributeValue: false,//是否是修改子类型状态
             updateAttributeValueID: "111222",
-            updateAttributeValueName: "",
+            updateAttributeValue: "",
             selectAttribute: "",
-            options: [{
-                attributeID: '111',
-                attributeName: '短袖'
-            }, {
-                attributeID: '222',
-                attributeName: '裙子'
-            }],
+            options: [],
+            totalCount: 0,
             attributeValueList: []
         }
     },
@@ -136,19 +131,21 @@ export default {
         },
         handleCurrentChange() {
             this.pageIndex = (this.currentPage - 1) * this.pageSize;
+            this.getAttributeValueList();
         },
         //点击编辑
         handleEdit(index, row) {
             this.isUpdateAttributeValue = true;
             this.updateAttributeValueID = row.attributeValueID;
-            this.updateAttributeValueName = row.attributeValueName;
+            this.updateAttributeValue = row.attributeValue;
+            this.selectAttribute = row.attributeID;
 
         },
         //点击删除
         handleDelete(index, row) {
             let self = this;
             console.log(index, row);
-            this.$confirm('确认删除属性值【' + row.attributeValueName + '】?', '提示', {
+            this.$confirm('确认删除属性值【' + row.attributeValue + '】?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
@@ -187,9 +184,9 @@ export default {
             let url = extend.rootPath + '/addAttributeValue';
             let data = {
                 UserNo: userNo,
-                TypeID:this.selectType,
+                AttributeID: this.selectAttribute,
                 AttributeValueID: '',
-                AttributeValueName: this.addAttributeValueName
+                AttributeValue: this.addAttributeValue
 
             };
             self.$http.get(url, { params: data }).then(function (successRes) {
@@ -214,9 +211,9 @@ export default {
             let url = extend.rootPath + '/addAttributeValue';
             let data = {
                 UserNo: userNo,
-                AttributeID:this.selectAttribute,
-               AttributeValueID: self.updateAttributeValueID,
-                AttributeValueName: self.updateAttributeValueName
+                AttributeID: this.selectAttribute,
+                AttributeValueID: self.updateAttributeValueID,
+                AttributeValue: self.updateAttributeValue
 
             };
             self.$http.get(url, { params: data }).then(function (successRes) {
@@ -243,13 +240,14 @@ export default {
             let url = extend.rootPath + '/getAttributeValueList';
             let data = {
                 UserNo: userNo,
-               AttributeValueName: this.inputAttributeValueName,
+                AttributeValue: this.inputAttributeValue,
                 PageIndex: this.pageIndex,
                 PageSize: this.pageSize
 
             };
             self.$http.get(url, { params: data }).then(function (successRes) {
                 if (successRes.data.Code == 1) {
+                    self.totalCount = successRes.data.TotalCount;
                     self.attributeValueList = successRes.data.AttributeValueList;
                 }
 

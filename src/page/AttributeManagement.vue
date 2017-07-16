@@ -23,7 +23,7 @@
                     </el-form-item>
                 </el-form>
                 <!--表格-->
-                <el-table :data="typeList" class="my-table" height="100">
+                <el-table :data="attributeList" class="my-table" height="100">
                     <el-table-column label="操作" width="200">
                         <template scope="scope">
                             <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
@@ -37,7 +37,7 @@
                 </el-table>
                 <!--底部分页-->
                 <div class="pagination">
-                    <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="10" layout="total, prev, pager, next, jumper" :total="400">
+                    <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="10" layout="total, prev, pager, next, jumper" :total="totalCount">
                     </el-pagination>
                 </div>
     
@@ -97,6 +97,7 @@ export default {
             isUpdateAttribute: false,//是否是修改状态弹窗
             updateAttributeID: "",
             updateAttributeName: "",
+            totalCount: 0,
             attributeList: []
         }
     },
@@ -111,6 +112,7 @@ export default {
         },
         handleCurrentChange() {
             this.pageIndex = (this.currentPage - 1) * this.pageSize;
+            this.getAttributeList();
         },
         //点击编辑
         handleEdit(index, row) {
@@ -191,7 +193,7 @@ export default {
             let self = this;
             let url = extend.rootPath + '/addAttribute';
             let data = {
-                 ShopID: 'ALL',
+                ShopID: 'ALL',
                 UserNo: userNo,
                 AttributeID: self.updateAttributeID,
                 AttributeName: self.updateAttributeName
@@ -227,6 +229,7 @@ export default {
             };
             self.$http.get(url, { params: data }).then(function (successRes) {
                 if (successRes.data.Code == 1) {
+                    self.totalCount = successRes.data.TotalCount;
                     self.attributeList = successRes.data.AttributeList;
                 }
 

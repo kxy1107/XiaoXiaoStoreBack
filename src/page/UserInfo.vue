@@ -68,6 +68,7 @@ export default {
       formUserInfo: {
         userName: "",
       },
+      totalCount:0,
       userInfoData: [
         {
           userName: "小王",

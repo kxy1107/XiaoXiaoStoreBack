@@ -11,6 +11,9 @@
                             <el-menu-item index="/BrandMenagement" >品牌管理</el-menu-item>
                             <el-menu-item index="/TypeMenagement" >类型管理</el-menu-item>
                             <el-menu-item index="/SubTypeMenagement">子类型管理</el-menu-item>
+                            <el-menu-item index="/AttributeManagement">属性管理</el-menu-item>
+                            <el-menu-item index="/AttributeValueManagement">属性值管理</el-menu-item>
+                            <el-menu-item index="/ShopInfoManagement">商品信息管理</el-menu-item>
                     </el-submenu>
                     <el-menu-item index="3">导航三</el-menu-item>
                 </el-menu>
@@ -20,6 +23,7 @@
 <script>
 export default {
   name:'NavMenu',
+ 
 }
 </script>
 <style scoped>

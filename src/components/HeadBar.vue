@@ -2,18 +2,26 @@
     <header>
       <img src="../assets/logo.png" alt="logo" class="header-logo">
       <div class="header-operations">
-        <span >老王</span>
+        <span >{{userName}}</span>
         <span class="exit-sys" @click="exitLogin">退出系统</span>
       </div>
       </header>
 </template>
 <script>
   export default {
+    data(){
+      return {
+        userName:''
+      }
+    },
     methods:{
       exitLogin(){
-        this.$router.push({ path: '/Login' });
+        this.$router.push({ path: '/' });
       }
-    }
+    },
+     mounted:function(){
+      this.userName = JSON.parse(sessionStorage.getItem('userInfo')).UserName;
+  }
   };
 </script>
 <style>

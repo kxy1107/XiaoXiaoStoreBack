@@ -41,7 +41,7 @@
                 </el-table>
                 <!--底部分页-->
                 <div class="pagination">
-                    <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="10" layout="total, prev, pager, next, jumper" :total="400">
+                    <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="10" layout="total, prev, pager, next, jumper" :total="totalCount">
                     </el-pagination>
                 </div>
     
@@ -114,13 +114,8 @@ export default {
             updateSubTypeID: "111222",
             updateSubTypeName: "",
             selectType: "",
-            options: [{
-                typeID: '111',
-                typeName: '短袖'
-            }, {
-                typeID: '222',
-                typeName: '裙子'
-            }],
+            options: [],
+            totalCount: 0,
             subTypeList: []
         }
     },
@@ -136,12 +131,14 @@ export default {
         },
         handleCurrentChange() {
             this.pageIndex = (this.currentPage - 1) * this.pageSize;
+            this.getSubTypeList();
         },
         //点击编辑
         handleEdit(index, row) {
             this.isUpdateSubType = true;
             this.updateSubTypeID = row.subTypeID;
             this.updateSubTypeName = row.subTypeName;
+            this.selectType = row.typeID;
 
         },
         //点击删除
@@ -187,7 +184,7 @@ export default {
             let url = extend.rootPath + '/addSubType';
             let data = {
                 UserNo: userNo,
-                TypeID:this.selectType,
+                TypeID: this.selectType,
                 SubTypeID: '',
                 SubTypeName: this.addSubTypeName
 
@@ -214,7 +211,7 @@ export default {
             let url = extend.rootPath + '/addSubType';
             let data = {
                 UserNo: userNo,
-                TypeID:this.selectType,
+                TypeID: this.selectType,
                 SubTypeID: self.updateSubTypeID,
                 SubTypeName: self.updateSubTypeName
 
@@ -250,6 +247,7 @@ export default {
             };
             self.$http.get(url, { params: data }).then(function (successRes) {
                 if (successRes.data.Code == 1) {
+                    self.totalCount = successRes.data.TotalCount;
                     self.subTypeList = successRes.data.SubTypeList;
                 }
 

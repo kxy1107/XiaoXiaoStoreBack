@@ -37,7 +37,7 @@
                 </el-table>
                 <!--底部分页-->
                 <div class="pagination">
-                    <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="10" layout="total, prev, pager, next, jumper" :total="brandList.length">
+                    <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="10" layout="total, prev, pager, next, jumper" :total="totalCount">
                     </el-pagination>
                 </div>
     
@@ -97,6 +97,7 @@ export default {
             isUpdateBrand: false,//是否是修改状态
             updateBrandID: "",//修改品牌的ID
             updateBrandName: "",//修改品牌的名称
+            totalCount: 0,
             brandList: [],//品牌列表
         }
     },
@@ -111,6 +112,8 @@ export default {
         },
         handleCurrentChange(val) {
             this.pageIndex = (this.currentPage - 1) * this.pageSize;
+            this.getBrandList()
+
         },
         //点击编辑
         handleEdit(index, row) {
@@ -221,6 +224,7 @@ export default {
             };
             self.$http.get(url, { params: data }).then(function (successRes) {
                 if (successRes.data.Code == 1) {
+                    self.totalCount = successRes.data.TotalCount;
                     self.brandList = successRes.data.BrandList;
                 }
 

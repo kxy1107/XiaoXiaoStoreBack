@@ -37,7 +37,7 @@
                 </el-table>
                 <!--底部分页-->
                 <div class="pagination">
-                    <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="10" layout="total, prev, pager, next, jumper" :total="400">
+                    <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="10" layout="total, prev, pager, next, jumper" :total="totalCount">
                     </el-pagination>
                 </div>
     
@@ -97,6 +97,7 @@ export default {
             isUpdateType: false,//是否是修改状态弹窗
             updateTypeID: "",
             updateTypeName: "",
+            totalCount: 0,
             typeList: []
         }
     },
@@ -111,6 +112,7 @@ export default {
         },
         handleCurrentChange() {
             this.pageIndex = (this.currentPage - 1) * this.pageSize;
+            this.getTypeList();
         },
         //点击编辑
         handleEdit(index, row) {
@@ -224,6 +226,7 @@ export default {
             };
             self.$http.get(url, { params: data }).then(function (successRes) {
                 if (successRes.data.Code == 1) {
+                    self.totalCount = successRes.data.TotalCount;
                     self.typeList = successRes.data.TypeList;
                 }
 
