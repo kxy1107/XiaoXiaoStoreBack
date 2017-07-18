@@ -133,11 +133,12 @@ export default {
     methods: {
         //点击查询
         onClickSearch() {
-
+            this.getShopInfoList();
         },
         //页数更改
         handleCurrentChange(val) {
             this.pageIndex = (this.currentPage - 1) * this.pageSize;
+            this.getShopInfoList();
         },
 
         //详情
@@ -146,8 +147,61 @@ export default {
         },
         //删除
         handleDelete(index, row) {
+            let self = this;
+            console.log(index, row);
+            this.$confirm('确认删除商品【' + row.shopTitle + '】?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
 
-         },
+                let url = extend.rootPath + '/delShopInfo';
+                let data = {
+                    UserNo: userNo,
+                    ShopID: row.shopID,
+                };
+                self.$http.get(url, { params: data }).then(function (successRes) {
+                    if (successRes.data.Code == 1) {
+                        this.$message({
+                            type: 'success',
+                            message: '删除成功',
+
+                        });
+                        self.getShopInfoList();
+                    }
+                }, function (failRes) {
+                });
+
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                });
+            });
+        },
+
+        //获取商品信息列表
+        getShopInfoList() {
+            let self = this;
+            let url = extend.rootPath + '/getShopInfoList';
+            let data = {
+                UserNo: userNo,
+                ShopTitle: self.shopTitle,
+                IsHot: self.selectNewValue,
+                IsNew: self.selectNewValue,
+                IsIndexBanner: self.selectIndexBannerValue,
+                PageIndex: this.pageIndex,
+                PageSize: this.pageSize
+            };
+            self.$http.get(url, { params: data }).then(function (successRes) {
+                if (successRes.data.Code == 1) {
+                    self.totalCount = successRes.data.TotalCount;
+                    self.shopInfoList = successRes.data.ShopInfoList;
+                }
+            }, function (failRes) {
+
+            });
+        },
     },
 
 }
