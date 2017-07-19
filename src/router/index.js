@@ -8,6 +8,9 @@ import SubTypeMenagement from '@/page/SubTypeMenagement'
 import AttributeManagement from '@/page/AttributeManagement'
 import AttributeValueManagement from '@/page/AttributeValueManagement'
 import ShopInfoManagement from '@/page/ShopInfoManagement'
+import ShopInfoDetail from '@/page/ShopInfoDetail'
+
+
 Vue.use(Router)
 
 export default new Router({
@@ -51,6 +54,11 @@ export default new Router({
       path: '/ShopInfoManagement',
       name: 'ShopInfoManagement',
       component: ShopInfoManagement
+    },
+    {
+      path: '/ShopInfoDetail',
+      name: 'ShopInfoDetail',
+      component: ShopInfoDetail
     },
   ]
 })

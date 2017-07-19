@@ -4,6 +4,7 @@
         <div class="contain">
             <NavMenu></NavMenu>
             <div class="main-content">
+                
                 <el-breadcrumb class="breadcrumb">
                     <el-breadcrumb-item>商品管理</el-breadcrumb-item>
                     <el-breadcrumb-item>商品信息管理</el-breadcrumb-item>
@@ -11,7 +12,7 @@
     
                 <el-form :inline="true" class="top-form">
                     <el-form-item>
-                        <el-button type="primary" @click="dialogAddShopInfo">添加新商品</el-button>
+                        <el-button type="primary" @click="addShopInfo">添加新商品</el-button>
                     </el-form-item>
                     <el-form-item>
                         <el-input v-model="inputShopTitle" placeholder="请输入商品标题"></el-input>
@@ -129,6 +130,7 @@ export default {
 
     mounted: function () {
         userNo = JSON.parse(sessionStorage.getItem('userInfo')).userNo;
+        this.getShopInfoList();
     },
     methods: {
         //点击查询
@@ -201,6 +203,11 @@ export default {
             }, function (failRes) {
 
             });
+        },
+
+        //点击添加商品信息
+        addShopInfo:function(){
+             this.$router.push({ path: '/ShopInfoDetail?ShopID=' });
         },
     },
 

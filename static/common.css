@@ -45,3 +45,8 @@
 .pagination input {
     width: 50px !important;
 }
+
+.btn-return{
+    width: 100px;
+    margin: 10px;
+}
