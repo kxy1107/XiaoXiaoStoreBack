@@ -129,7 +129,7 @@ export default {
     },
 
     mounted: function () {
-        userNo = JSON.parse(sessionStorage.getItem('userInfo')).userNo;
+        userNo = JSON.parse(sessionStorage.getItem('userInfo')).UserNo;
         this.getShopInfoList();
     },
     methods: {
