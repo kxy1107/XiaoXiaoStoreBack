@@ -56,6 +56,15 @@
                     </el-form-item>
     
                     <el-form-item label="首页轮播图">
+    
+                        <div class="shop-detail-index-banner">
+                            <el-upload :before-upload="beforeAvatarUpload" show-file-list="true" class="avatar-uploader" action="https://jsonplaceholder.typicode.com/posts/" :show-file-list="false" :on-success="handleAvatarSuccess">
+                                <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                            </el-upload>
+    
+                            <el-button v-if="imageUrl != ''" @click="delIndexBannerPic" type="danger" class="shop-detail-btn-del-index-banner">删除</el-button>
+                        </div>
                     </el-form-item>
     
                     <el-form-item>
@@ -137,7 +146,8 @@ export default {
             selectNewValue: "",
             selectHotValue: "",
             selectIndexBannerValue: "",
-          
+            imageUrl: "",
+
 
         }
     },
@@ -174,8 +184,33 @@ export default {
 
             });
         },
-     
-       
+
+        //图片上传前检验格式
+        beforeAvatarUpload(file) {
+            const isJPG = file.type === 'image/jpeg';
+            const isLt2M = file.size / 1024 / 1024 < 2;
+
+            if (file.type === 'image/jpeg' || file.type != 'image/jpeg') {
+                this.$message.error('上传头像图片只能是 JPG 格式!');
+            }
+            if (!isLt2M) {
+                this.$message.error('上传头像图片大小不能超过 2MB!');
+            }
+            return isJPG && isLt2M;
+        },
+
+        //文件上传成功时
+        handleAvatarSuccess(res, file) {
+            this.imageUrl = URL.createObjectURL(file.raw);
+        },
+
+
+        // 删除首页轮播图
+        delIndexBannerPic() {
+            this.imageUrl = "";
+        },
+
+
     }
 }
 </script>
@@ -210,8 +245,8 @@ export default {
     overflow: hidden;
 }
 
-.avatar-uploade :hover {
-    border-color: #20a0ff;
+.avatar-uploade:hover {
+    border-color: red;
 }
 
 .avatar-uploader-icon {
@@ -227,6 +262,17 @@ export default {
     width: 178px;
     height: 178px;
     display: block;
+}
+
+.shop-detail-index-banner {
+    display: flex;
+    align-items: center;
+}
+
+.shop-detail-btn-del-index-banner {
+    margin: 20px;
+    width: 100px;
+    height: 50px;
 }
 </style>
 
