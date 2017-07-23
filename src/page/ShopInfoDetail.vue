@@ -17,21 +17,29 @@
                         <el-input :disabled="true" placeholder="添加商品" v-model="shopInfo.shopID" class="input-shopid"></el-input>
                     </el-form-item>
     
-                    <el-form-item label="商品标题:">
+                    <el-form-item label="商品标题:" :rules="[
+                                                    { required: true, message: '商品标题不能为空',trigger: 'blur' }
+                                                    ]">
                         <el-input v-model="shopInfo.shopTitle" placeholder="请输入商品标题"></el-input>
                     </el-form-item>
     
-                    <el-form-item label="商品价格:">
+                    <el-form-item label="商品价格:" :rules="[
+                            { required: true, message: '年龄不能为空'}, { type: 'number', message: '年龄必须为数字值'}
+                                ]">
                         <el-input class="shop-detail-price" value="number" v-model.number="shopInfo.shopPrice" placeholder="请输入商品价格"></el-input>
                     </el-form-item>
-                    <el-form-item label="品牌">
+                    <el-form-item label="品牌" :rules="[
+                                { required: true, message: '品牌不能为空',trigger: 'blur' }
+                                                    ]">
                         <el-select v-model="selectBrandID" placeholder="请选择品牌">
                             <el-option v-for="item in brandList" :key="item.brandID" :label="item.brandName" :value="item.brandID">
                             </el-option>
                         </el-select>
                     </el-form-item>
     
-                    <el-form-item label="类型">
+                    <el-form-item label="类型" :rules="[
+                                { required: true, message: '类型不能为空',trigger: 'blur' }
+                                                    ]">
                         <el-cascader expand-tigger="hover" :options="typeList" v-model="selectType">
                         </el-cascader>
                     </el-form-item>
@@ -55,10 +63,10 @@
                         </el-select>
                     </el-form-item>
     
-                    <el-form-item label="首页轮播图">
+                    <el-form-item v-if="selectIndexBannerValue == 'S0A'" label="首页轮播图">
     
                         <div class="shop-detail-index-banner">
-                            <el-upload :before-upload="beforeAvatarUpload" show-file-list="true" class="avatar-uploader" action="https://jsonplaceholder.typicode.com/posts/" :show-file-list="false" :on-success="handleAvatarSuccess">
+                            <el-upload :before-upload="beforeAvatarUpload" show-file-list="true" class="avatar-uploader" action= "http://localhost:8028/pc/uploadBanner" :show-file-list="false" :on-success="handleAvatarSuccess">
                                 <img v-if="imageUrl" :src="imageUrl" class="avatar">
                                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                             </el-upload>
@@ -103,46 +111,9 @@ export default {
                 }
             ],
 
-            typeList: [
-                {
-                    value: '1122',
-                    label: "衣服",
-                    children: [
-                        {
-                            value: '112211',
-                            label: '连衣裙'
-                        },
-                        {
-                            value: '112222',
-                            label: '超短裙'
-                        },
-                        {
-                            value: '112233',
-                            label: '长裙'
-                        }
-                    ]
-                },
-                {
-                    value: '1133',
-                    label: "裤子",
-                    children: [
-                        {
-                            value: '113311',
-                            label: '短裤'
-                        },
-                        {
-                            value: '113322',
-                            label: '牛仔裤'
-                        },
-                        {
-                            value: '113333',
-                            label: '七分裤'
-                        }
-                    ]
-                }
-            ],
+            typeList: [],
 
-            selectType: ["1122", "112222"],
+            selectType: ["", ""],
             selectNewValue: "",
             selectHotValue: "",
             selectIndexBannerValue: "",
@@ -158,6 +129,7 @@ export default {
     mounted: function () {
         userNo = JSON.parse(sessionStorage.getItem('userInfo')).UserNo;
         this.getBrandList();
+        this.getTypeSubTypeList();
     },
     methods: {
         //点击返回
@@ -185,18 +157,31 @@ export default {
             });
         },
 
+        //获取类型列表
+        getTypeSubTypeList() {
+            let self = this;
+            let url = extend.rootPath + '/getTypeSubType';
+            let data = {
+                UserNo: userNo,
+            };
+            self.$http.get(url, { params: data }).then(function (successRes) {
+                if (successRes.data.Code == 1) {
+                    self.typeList = successRes.data.TypeSubTypeList;
+                }
+
+            }, function (failRes) {
+
+            });
+        },
+
         //图片上传前检验格式
         beforeAvatarUpload(file) {
-            const isJPG = file.type === 'image/jpeg';
-            const isLt2M = file.size / 1024 / 1024 < 2;
 
-            if (file.type === 'image/jpeg' || file.type != 'image/jpeg') {
-                this.$message.error('上传头像图片只能是 JPG 格式!');
+            if (file.type === 'image/jpeg' || file.type === 'image/png') {
+                return true;
             }
-            if (!isLt2M) {
-                this.$message.error('上传头像图片大小不能超过 2MB!');
-            }
-            return isJPG && isLt2M;
+            this.$message.error('上传头像图片只能是 JPG或PNG 格式!');
+            return true;
         },
 
         //文件上传成功时
