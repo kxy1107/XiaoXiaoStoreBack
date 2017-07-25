@@ -18,19 +18,19 @@
                     </el-form-item>
     
                     <el-form-item label="商品标题:" :rules="[
-                                                    { required: true, message: '商品标题不能为空',trigger: 'blur' }
-                                                    ]">
+                                                                    { required: true, message: '商品标题不能为空',trigger: 'blur' }
+                                                                    ]">
                         <el-input v-model="shopInfo.shopTitle" placeholder="请输入商品标题"></el-input>
                     </el-form-item>
     
                     <el-form-item label="商品价格:" :rules="[
-                            { required: true, message: '年龄不能为空'}, { type: 'number', message: '年龄必须为数字值'}
-                                ]">
+                                            { required: true, message: '年龄不能为空'}, { type: 'number', message: '年龄必须为数字值'}
+                                                ]">
                         <el-input class="shop-detail-price" value="number" v-model.number="shopInfo.shopPrice" placeholder="请输入商品价格"></el-input>
                     </el-form-item>
                     <el-form-item label="品牌" :rules="[
-                                { required: true, message: '品牌不能为空',trigger: 'blur' }
-                                                    ]">
+                                                { required: true, message: '品牌不能为空',trigger: 'blur' }
+                                                                    ]">
                         <el-select v-model="selectBrandID" placeholder="请选择品牌">
                             <el-option v-for="item in brandList" :key="item.brandID" :label="item.brandName" :value="item.brandID">
                             </el-option>
@@ -38,8 +38,8 @@
                     </el-form-item>
     
                     <el-form-item label="类型" :rules="[
-                                { required: true, message: '类型不能为空',trigger: 'blur' }
-                                                    ]">
+                                                { required: true, message: '类型不能为空',trigger: 'blur' }
+                                                                    ]">
                         <el-cascader expand-tigger="hover" :options="typeList" v-model="selectType">
                         </el-cascader>
                     </el-form-item>
@@ -66,13 +66,19 @@
                     <el-form-item v-if="selectIndexBannerValue == 'S0A'" label="首页轮播图">
     
                         <div class="shop-detail-index-banner">
-                            <el-upload :before-upload="beforeAvatarUpload" show-file-list="true" class="avatar-uploader" action= "http://localhost:8028/pc/uploadBanner" :show-file-list="false" :on-success="handleAvatarSuccess">
+                            <el-upload :before-upload="beforeAvatarUpload" show-file-list="true" class="avatar-uploader" action="http://localhost:8028/pc/uploadBanner" :show-file-list="false" :on-success="uploadIndexBanner">
                                 <img v-if="imageUrl" :src="imageUrl" class="avatar">
                                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                             </el-upload>
     
                             <el-button v-if="imageUrl != ''" @click="delIndexBannerPic" type="danger" class="shop-detail-btn-del-index-banner">删除</el-button>
                         </div>
+                    </el-form-item>
+    
+                    <el-form-item label="商品轮播图">
+                        <el-upload action="http://localhost:8028/pc/uploadBanner" multiple="true" list-type="picture-card" :on-success="uploadShopBanner" :on-remove="handleRemove">
+                            <i class="el-icon-plus"></i>
+                        </el-upload>
                     </el-form-item>
     
                     <el-form-item>
@@ -118,6 +124,7 @@ export default {
             selectHotValue: "",
             selectIndexBannerValue: "",
             imageUrl: "",
+            shopImageUrlArr:[],
 
 
         }
@@ -184,15 +191,24 @@ export default {
             return true;
         },
 
-        //文件上传成功时
-        handleAvatarSuccess(res, file) {
-            this.imageUrl = URL.createObjectURL(file.raw);
+        //上传首页轮播图成功时
+        uploadIndexBanner(res, file) {
+            // this.imageUrl = URL.createObjectURL(file.raw);
+            this.imageUrl = extend.imgPath + res.ImgUrl;
+          
         },
 
 
         // 删除首页轮播图
         delIndexBannerPic() {
             this.imageUrl = "";
+        },
+
+        //上传商品轮播图成功时
+        uploadShopBanner(res, file) {
+            let imgUrl = extend.imgPath + res.ImgUrl;
+            shopImageUrlArr.push(imgUrl);
+            console.log(res)
         },
 
 

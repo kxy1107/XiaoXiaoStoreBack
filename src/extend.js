@@ -1,4 +1,5 @@
 let rootPath = 'http://localhost:8028/pc';
+let imgPath = 'http://localhost:8028/';
 function setCookie(cname, cvalue, exdays) {
     var d = new Date();
     d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
@@ -20,6 +21,7 @@ function delCookie(cname) {
 }
 export default {
     rootPath,
+    imgPath,
     setCookie,
     getCookie,
     delCookie,
