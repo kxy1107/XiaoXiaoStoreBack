@@ -13,22 +13,22 @@
                 <el-button type="primary" class="btn-return" @click="onClickReturn">返回</el-button>
     
                 <el-form class="shop-detail-form" label-width="100px">
-                    <el-form-item label="商品ID:">
+                    <el-form-item label="商品ID：">
                         <el-input :disabled="true" placeholder="添加商品" v-model="shopInfo.shopID" class="input-shopid"></el-input>
                     </el-form-item>
     
-                    <el-form-item label="商品标题:" :rules="[
+                    <el-form-item label="商品标题：" :rules="[
                                                                     { required: true, message: '商品标题不能为空',trigger: 'blur' }
                                                                     ]">
                         <el-input v-model="shopInfo.shopTitle" placeholder="请输入商品标题"></el-input>
                     </el-form-item>
     
-                    <el-form-item label="商品价格:" :rules="[
+                    <el-form-item label="商品价格：" :rules="[
                                             { required: true, message: '年龄不能为空'}, { type: 'number', message: '年龄必须为数字值'}
                                                 ]">
                         <el-input class="shop-detail-price" value="number" v-model.number="shopInfo.shopPrice" placeholder="请输入商品价格"></el-input>
                     </el-form-item>
-                    <el-form-item label="品牌" :rules="[
+                    <el-form-item label="品牌：" :rules="[
                                                 { required: true, message: '品牌不能为空',trigger: 'blur' }
                                                                     ]">
                         <el-select v-model="selectBrandID" placeholder="请选择品牌">
@@ -37,33 +37,33 @@
                         </el-select>
                     </el-form-item>
     
-                    <el-form-item label="类型" :rules="[
+                    <el-form-item label="类型：" :rules="[
                                                 { required: true, message: '类型不能为空',trigger: 'blur' }
                                                                     ]">
                         <el-cascader expand-tigger="hover" :options="typeList" v-model="selectType">
                         </el-cascader>
                     </el-form-item>
     
-                    <el-form-item label="最新">
+                    <el-form-item label="最新：">
                         <el-select v-model="selectNewValue" class="search-select">
                             <el-option v-for="item in options" :key="item.key" :label="item.label" :value="item.value">
                             </el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="最热">
+                    <el-form-item label="最热：">
                         <el-select v-model="selectHotValue" class="search-select">
                             <el-option v-for="item in options" :key="item.key" :label="item.label" :value="item.value">
                             </el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="首页轮播">
+                    <el-form-item label="首页轮播：">
                         <el-select v-model="selectIndexBannerValue" class="search-select">
                             <el-option v-for="item in options" :key="item.key" :label="item.label" :value="item.value">
                             </el-option>
                         </el-select>
                     </el-form-item>
     
-                    <el-form-item v-if="selectIndexBannerValue == 'S0A'" label="首页轮播图">
+                    <el-form-item v-if="selectIndexBannerValue == 'S0A'" label="首页轮播图：">
     
                         <div class="shop-detail-index-banner">
                             <el-upload :before-upload="beforeAvatarUpload" show-file-list="true" class="avatar-uploader" action="http://localhost:8028/pc/uploadBanner" :show-file-list="false" :on-success="uploadIndexBanner">
@@ -75,7 +75,7 @@
                         </div>
                     </el-form-item>
     
-                    <el-form-item label="商品轮播图">
+                    <el-form-item label="商品轮播图：">
                         <el-upload action="http://localhost:8028/pc/uploadBanner" multiple="true" list-type="picture-card" :on-success="uploadShopBanner" :on-remove="handleRemove">
                             <i class="el-icon-plus"></i>
                         </el-upload>
@@ -83,6 +83,9 @@
     
                     <el-form-item>
                         <el-button class="shop-detail-commit" type="primary">{{btnCommit}}</el-button>
+                    </el-form-item >
+                    <el-form-item label="商品详情：">
+                        <vue-html5-editor :content="shopDetail" :auto-height="true"></vue-html5-editor>
                     </el-form-item>
                 </el-form>
     
@@ -98,6 +101,7 @@ let userNo;
 export default {
     data() {
         return {
+            shopDetail:'',
             breadTitle: '添加商品信息',
             btnCommit: "添加",
             selectBrandID: '',//当前选择的品牌ID

@@ -16,4 +16,5 @@ export default {
 
 
 @import url("/static/common.css");
+@import url("/static/css/font-awesome.css");
 </style>
