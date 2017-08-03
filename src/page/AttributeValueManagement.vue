@@ -234,7 +234,7 @@ export default {
         },
 
 
-        //获取子类型列表
+        //获取属性值列表
         getAttributeValueList() {
             let self = this;
             let url = extend.rootPath + '/getAttributeValueList';
@@ -256,7 +256,7 @@ export default {
             });
         },
 
-        //获取类型列表
+        //获取属性列表
         getAttributeList() {
             let self = this;
             let url = extend.rootPath + '/getAttributeList';

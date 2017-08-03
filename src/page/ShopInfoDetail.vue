@@ -18,19 +18,19 @@
                     </el-form-item>
     
                     <el-form-item label="商品标题：" :rules="[
-                                                                    { required: true, message: '商品标题不能为空',trigger: 'blur' }
-                                                                    ]">
+                                                                                { required: true, message: '商品标题不能为空',trigger: 'blur' }
+                                                                                ]">
                         <el-input v-model="shopInfo.shopTitle" placeholder="请输入商品标题"></el-input>
                     </el-form-item>
     
                     <el-form-item label="商品价格：" :rules="[
-                                            { required: true, message: '年龄不能为空'}, { type: 'number', message: '年龄必须为数字值'}
-                                                ]">
+                                                        { required: true, message: '年龄不能为空'}, { type: 'number', message: '年龄必须为数字值'}
+                                                            ]">
                         <el-input class="shop-detail-price" value="number" v-model.number="shopInfo.shopPrice" placeholder="请输入商品价格"></el-input>
                     </el-form-item>
                     <el-form-item label="品牌：" :rules="[
-                                                { required: true, message: '品牌不能为空',trigger: 'blur' }
-                                                                    ]">
+                                                            { required: true, message: '品牌不能为空',trigger: 'blur' }
+                                                                                ]">
                         <el-select v-model="selectBrandID" placeholder="请选择品牌">
                             <el-option v-for="item in brandList" :key="item.brandID" :label="item.brandName" :value="item.brandID">
                             </el-option>
@@ -38,10 +38,21 @@
                     </el-form-item>
     
                     <el-form-item label="类型：" :rules="[
-                                                { required: true, message: '类型不能为空',trigger: 'blur' }
-                                                                    ]">
+                                                            { required: true, message: '类型不能为空',trigger: 'blur' }
+                                                                                ]">
                         <el-cascader expand-tigger="hover" :options="typeList" v-model="selectType">
                         </el-cascader>
+                    </el-form-item>
+                    <el-form-item label="属性：">
+                        <el-checkbox-group v-model="selectAttrubuteArray" @change="changeSelectAttribute">
+                            <el-checkbox v-for="item in attributeList" :label="item" :key="item.attributeID">{{item.attributeName}}</el-checkbox>
+                        </el-checkbox-group>
+                    </el-form-item>
+    
+                    <el-form-item label="属性值：" v-if="selectAttrubuteArray.length > 0">
+                        <el-checkbox-group v-model="selectAttrubuteValueArray">
+                            <el-checkbox v-for="item in attributeValueList" :label="item" :key="item.attributeValueID">{{item.attributeValue}}</el-checkbox>
+                        </el-checkbox-group>
                     </el-form-item>
     
                     <el-form-item label="最新：">
@@ -67,23 +78,23 @@
     
                         <div class="shop-detail-index-banner">
                             <el-upload :before-upload="beforeAvatarUpload" show-file-list="true" class="avatar-uploader" action="http://localhost:8028/pc/uploadBanner" :show-file-list="false" :on-success="uploadIndexBanner">
-                                <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                                <img v-if="indexImageUrl" :src="indexImageUrl" class="avatar">
                                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                             </el-upload>
     
-                            <el-button v-if="imageUrl != ''" @click="delIndexBannerPic" type="danger" class="shop-detail-btn-del-index-banner">删除</el-button>
+                            <el-button v-if="indexImageUrl != ''" @click="delIndexBannerPic" type="danger" class="shop-detail-btn-del-index-banner">删除</el-button>
                         </div>
                     </el-form-item>
     
                     <el-form-item label="商品轮播图：">
-                        <el-upload action="http://localhost:8028/pc/uploadBanner" multiple="true" list-type="picture-card" :on-success="uploadShopBanner" :on-remove="handleRemove">
+                        <el-upload action="http://localhost:8028/pc/uploadBanner" multiple=true list-type="picture-card" :on-success="uploadShopBanner" :on-remove="delShopBanner">
                             <i class="el-icon-plus"></i>
                         </el-upload>
                     </el-form-item>
     
                     <el-form-item>
                         <el-button class="shop-detail-commit" type="primary">{{btnCommit}}</el-button>
-                    </el-form-item >
+                    </el-form-item>
                     <el-form-item label="商品详情：">
                         <vue-html5-editor :content="shopDetail" :auto-height="true"></vue-html5-editor>
                     </el-form-item>
@@ -98,10 +109,12 @@ import HeadBar from '@/components/HeadBar'
 import NavMenu from '@/components/NavMenu'
 import extend from '@/extend.js'
 let userNo;
+let allAttributeValue = [];//所有属性值
+let shopImageUrlArr = [];//商品轮播图列表
 export default {
     data() {
         return {
-            shopDetail:'',
+            shopDetail: '',
             breadTitle: '添加商品信息',
             btnCommit: "添加",
             selectBrandID: '',//当前选择的品牌ID
@@ -121,14 +134,18 @@ export default {
                 }
             ],
 
-            typeList: [],
+            typeList: [],//类型列表
+            attributeList: [],//属性列表
+            selectAttrubuteArray: [],//选择的属性
+            attributeValueList: [],//属性值列表
+            selectAttrubuteValueArray: [],//选择的属性值
 
             selectType: ["", ""],
             selectNewValue: "",
             selectHotValue: "",
             selectIndexBannerValue: "",
-            imageUrl: "",
-            shopImageUrlArr:[],
+            indexImageUrl: "",//首页轮播图
+         
 
 
         }
@@ -141,7 +158,10 @@ export default {
         userNo = JSON.parse(sessionStorage.getItem('userInfo')).UserNo;
         this.getBrandList();
         this.getTypeSubTypeList();
+        this.getAttributeList();
+        this.getAttributeValueList();
     },
+
     methods: {
         //点击返回
         onClickReturn() {
@@ -185,6 +205,64 @@ export default {
             });
         },
 
+        //获取属性列表
+        getAttributeList() {
+            let self = this;
+            let url = extend.rootPath + '/getAttributeList';
+            let data = {
+                UserNo: userNo,
+                AttributeName: "",
+                PageIndex: 0,
+                PageSize: 10000,
+
+            };
+            self.$http.get(url, { params: data }).then(function (successRes) {
+                if (successRes.data.Code == 1) {
+                    self.attributeList = successRes.data.AttributeList;
+                }
+
+            }, function (failRes) {
+
+            });
+        },
+
+
+        //获取属性值列表
+        getAttributeValueList() {
+            let self = this;
+            let url = extend.rootPath + '/getAttributeValueList';
+            let data = {
+                UserNo: userNo,
+                AttributeValue: "",
+                PageIndex: 0,
+                PageSize: 100000
+
+            };
+            self.$http.get(url, { params: data }).then(function (successRes) {
+                if (successRes.data.Code == 1) {
+                    allAttributeValue = successRes.data.AttributeValueList;
+                }
+
+            }, function (failRes) {
+
+            });
+        },
+
+        //选择属性选择框改编
+        changeSelectAttribute(selectArr) {
+            let self = this;
+            let selectValue = [];
+            for (let key of selectArr) {
+                console.log(key.attributeID)
+                for (let item of allAttributeValue) {
+                    if (item.attributeID == key.attributeID) {
+                        selectValue.push(item);
+                    }
+                }
+            }
+            self.attributeValueList = selectValue;
+        },
+
         //图片上传前检验格式
         beforeAvatarUpload(file) {
 
@@ -198,14 +276,14 @@ export default {
         //上传首页轮播图成功时
         uploadIndexBanner(res, file) {
             // this.imageUrl = URL.createObjectURL(file.raw);
-            this.imageUrl = extend.imgPath + res.ImgUrl;
-          
+            this.indexImageUrl = extend.imgPath + res.ImgUrl;
+
         },
 
 
         // 删除首页轮播图
         delIndexBannerPic() {
-            this.imageUrl = "";
+            this.indexImageUrl = "";
         },
 
         //上传商品轮播图成功时
@@ -215,6 +293,14 @@ export default {
             console.log(res)
         },
 
+        //删除商品轮播图
+         delShopBanner(file, fileList) {
+             let delUrl = extend.imgPath + file.response.ImgUrl;
+             let index =  shopImageUrlArr.indexOf(delUrl);
+             if(index > -1){
+                 shopImageUrlArr.splice(index,1);
+             }
+        },
 
     }
 }
@@ -225,7 +311,7 @@ export default {
     background-color: #f2f2f2;
     padding: 10px;
     flex: 1;
-    overflow-y: auto;
+    overflow-y: scroll;
 }
 
 
