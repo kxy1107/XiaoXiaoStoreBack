@@ -14,19 +14,19 @@
     
                 <el-form class="shop-detail-form" label-width="100px">
                     <el-form-item label="商品ID：">
-                        <el-input :disabled="true" placeholder="添加商品" v-model="shopInfo.shopID" class="input-shopid"></el-input>
+                        <el-input :disabled="true" placeholder="添加商品" v-model="shopID" class="input-shopid"></el-input>
                     </el-form-item>
     
                     <el-form-item label="商品标题：" :rules="[
                                                                                 { required: true, message: '商品标题不能为空',trigger: 'blur' }
                                                                                 ]">
-                        <el-input v-model="shopInfo.shopTitle" placeholder="请输入商品标题"></el-input>
+                        <el-input v-model="shopTitle" placeholder="请输入商品标题"></el-input>
                     </el-form-item>
     
                     <el-form-item label="商品价格：" :rules="[
                                                         { required: true, message: '年龄不能为空'}, { type: 'number', message: '年龄必须为数字值'}
                                                             ]">
-                        <el-input class="shop-detail-price" value="number" v-model.number="shopInfo.shopPrice" placeholder="请输入商品价格"></el-input>
+                        <el-input class="shop-detail-price" value="number" v-model.number="shopPrice" placeholder="请输入商品价格"></el-input>
                     </el-form-item>
                     <el-form-item label="品牌：" :rules="[
                                                             { required: true, message: '品牌不能为空',trigger: 'blur' }
@@ -92,11 +92,12 @@
                         </el-upload>
                     </el-form-item>
     
-                    <el-form-item>
-                        <el-button class="shop-detail-commit" type="primary">{{btnCommit}}</el-button>
-                    </el-form-item>
+                  
                     <el-form-item label="商品详情：">
-                        <vue-html5-editor :content="shopDetail" :auto-height="true"></vue-html5-editor>
+                        <vue-html5-editor :content="shopDetail" :auto-height="true" ref="editor" @change="changeEditor"></vue-html5-editor>
+                    </el-form-item>
+                      <el-form-item>
+                        <el-button class="shop-detail-commit" type="primary" @click="onSubmit">{{btnCommit}}</el-button>
                     </el-form-item>
                 </el-form>
     
@@ -110,7 +111,7 @@ import NavMenu from '@/components/NavMenu'
 import extend from '@/extend.js'
 let userNo;
 let allAttributeValue = [];//所有属性值
-let shopImageUrlArr = [];//商品轮播图列表
+let shopBannerImgUrl = [];//商品轮播图列表
 export default {
     data() {
         return {
@@ -119,9 +120,9 @@ export default {
             btnCommit: "添加",
             selectBrandID: '',//当前选择的品牌ID
             brandList: [],//品牌列表
-            shopInfo: {
-                shopID: '111'
-            },
+            shopID:"",
+            shopTitle:"",
+            shopPrice:"",
             options: [
                 {
                     label: '是',
@@ -140,10 +141,10 @@ export default {
             attributeValueList: [],//属性值列表
             selectAttrubuteValueArray: [],//选择的属性值
 
-            selectType: ["", ""],
-            selectNewValue: "",
-            selectHotValue: "",
-            selectIndexBannerValue: "",
+            selectType: [],//选择的类型和子类型
+            selectNewValue: "S0C",
+            selectHotValue: "S0C",
+            selectIndexBannerValue: "S0C",
             indexImageUrl: "",//首页轮播图
          
 
@@ -289,19 +290,53 @@ export default {
         //上传商品轮播图成功时
         uploadShopBanner(res, file) {
             let imgUrl = extend.imgPath + res.ImgUrl;
-            shopImageUrlArr.push(imgUrl);
+            shopBannerImgUrl.push(imgUrl);
             console.log(res)
         },
 
         //删除商品轮播图
          delShopBanner(file, fileList) {
              let delUrl = extend.imgPath + file.response.ImgUrl;
-             let index =  shopImageUrlArr.indexOf(delUrl);
+             let index =  shopBannerImgUrl.indexOf(delUrl);
              if(index > -1){
-                 shopImageUrlArr.splice(index,1);
-             }
+                 shopBannerImgUrl.splice(index,1);
+             } 
         },
 
+            changeEditor(data){
+                this.shopDetail = data;
+            },
+
+         //添加商品
+        onSubmit() {
+            let self = this;
+            let url = extend.rootPath + '/addShopInfo';
+            let data = {
+                UserNo: userNo,
+                ShopID: self.shopID,
+                ShopTitle: self.shopTitle,
+                ShopPrice: self.shopPrice,
+                ShopBrandID: self.selectBrandID,
+                ShopDescribe:self.shopDetail,
+                ShopTypeID:self.selectType[0],
+                ShopSubTypeID:self.selectType[1],
+                IsIndexBanner:self.selectIndexBannerValue,
+                IsHot:self.selectHotValue,
+                IsNew:self.selectNewValue,
+                IndexImgUrl:self.indexImageUrl,
+                ShopBannerImgUrl:shopBannerImgUrl,
+                AttributeValue:self.selectAttrubuteValueArray,
+
+            };
+            self.$http.get(url, { params: data }).then(function (successRes) {
+                if (successRes.data.Code == 1) {
+                    allAttributeValue = successRes.data.AttributeValueList;
+                }
+
+            }, function (failRes) {
+
+            });
+        },
     }
 }
 </script>
