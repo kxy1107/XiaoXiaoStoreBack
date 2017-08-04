@@ -325,12 +325,17 @@ export default {
                 IsNew:self.selectNewValue,
                 IndexImgUrl:self.indexImageUrl,
                 ShopBannerImgUrl:shopBannerImgUrl,
+                Attribute:self.selectAttrubuteArray,
                 AttributeValue:self.selectAttrubuteValueArray,
 
             };
             self.$http.get(url, { params: data }).then(function (successRes) {
                 if (successRes.data.Code == 1) {
-                    allAttributeValue = successRes.data.AttributeValueList;
+                     this.$message({
+                        type: 'success',
+                        message: '添加成功'
+                    });
+                     this.$router.push({ path: '/ShopInfoManagement' });
                 }
 
             }, function (failRes) {
