@@ -18,19 +18,19 @@
                     </el-form-item>
     
                     <el-form-item label="商品标题：" :rules="[
-                                                                                { required: true, message: '商品标题不能为空',trigger: 'blur' }
-                                                                                ]">
+                                                                                    { required: true, message: '商品标题不能为空',trigger: 'blur' }
+                                                                                    ]">
                         <el-input v-model="shopTitle" placeholder="请输入商品标题"></el-input>
                     </el-form-item>
     
                     <el-form-item label="商品价格：" :rules="[
-                                                        { required: true, message: '年龄不能为空'}, { type: 'number', message: '年龄必须为数字值'}
-                                                            ]">
+                                                            { required: true, message: '年龄不能为空'}, { type: 'number', message: '年龄必须为数字值'}
+                                                                ]">
                         <el-input class="shop-detail-price" value="number" v-model.number="shopPrice" placeholder="请输入商品价格"></el-input>
                     </el-form-item>
                     <el-form-item label="品牌：" :rules="[
-                                                            { required: true, message: '品牌不能为空',trigger: 'blur' }
-                                                                                ]">
+                                                                { required: true, message: '品牌不能为空',trigger: 'blur' }
+                                                                                    ]">
                         <el-select v-model="selectBrandID" placeholder="请选择品牌">
                             <el-option v-for="item in brandList" :key="item.brandID" :label="item.brandName" :value="item.brandID">
                             </el-option>
@@ -38,8 +38,8 @@
                     </el-form-item>
     
                     <el-form-item label="类型：" :rules="[
-                                                            { required: true, message: '类型不能为空',trigger: 'blur' }
-                                                                                ]">
+                                                                { required: true, message: '类型不能为空',trigger: 'blur' }
+                                                                                    ]">
                         <el-cascader expand-tigger="hover" :options="typeList" v-model="selectType">
                         </el-cascader>
                     </el-form-item>
@@ -86,17 +86,28 @@
                         </div>
                     </el-form-item>
     
+                    <el-form-item label="商品封面图：">
+    
+                        <div class="shop-detail-index-banner">
+                            <el-upload :before-upload="beforeAvatarUpload" show-file-list="true" class="avatar-uploader" action="http://localhost:8028/pc/uploadBanner" :show-file-list="false" :on-success="uploadCoverImage">
+                                <img v-if="coverImgUrl" :src="coverImgUrl" class="avatar">
+                                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                            </el-upload>
+    
+                            <el-button v-if="coverImgUrl != ''" @click="delCoverPic" type="danger" class="shop-detail-btn-del-index-banner">删除</el-button>
+                        </div>
+                    </el-form-item>
+    
                     <el-form-item label="商品轮播图：">
                         <el-upload action="http://localhost:8028/pc/uploadBanner" multiple=true list-type="picture-card" :on-success="uploadShopBanner" :on-remove="delShopBanner">
                             <i class="el-icon-plus"></i>
                         </el-upload>
                     </el-form-item>
     
-                  
                     <el-form-item label="商品详情：">
                         <vue-html5-editor :content="shopDetail" :auto-height="true" ref="editor" @change="changeEditor"></vue-html5-editor>
                     </el-form-item>
-                      <el-form-item>
+                    <el-form-item>
                         <el-button class="shop-detail-commit" type="primary" @click="onSubmit">{{btnCommit}}</el-button>
                     </el-form-item>
                 </el-form>
@@ -120,9 +131,9 @@ export default {
             btnCommit: "添加",
             selectBrandID: '',//当前选择的品牌ID
             brandList: [],//品牌列表
-            shopID:"",
-            shopTitle:"",
-            shopPrice:"",
+            shopID: "",
+            shopTitle: "",
+            shopPrice: "",
             options: [
                 {
                     label: '是',
@@ -146,7 +157,8 @@ export default {
             selectHotValue: "S0C",
             selectIndexBannerValue: "S0C",
             indexImageUrl: "",//首页轮播图
-         
+            coverImgUrl: "",//商品封面图
+
 
 
         }
@@ -287,6 +299,16 @@ export default {
             this.indexImageUrl = "";
         },
 
+        //上传商品封面图成功时
+        uploadCoverImage(res, file) {
+            this.coverImgUrl = extend.imgPath + res.ImgUrl;
+        },
+
+          // 删除商品封面图
+        delCoverPic() {
+            this.coverImgUrl = "";
+        },
+
         //上传商品轮播图成功时
         uploadShopBanner(res, file) {
             let imgUrl = extend.imgPath + res.ImgUrl;
@@ -295,19 +317,19 @@ export default {
         },
 
         //删除商品轮播图
-         delShopBanner(file, fileList) {
-             let delUrl = extend.imgPath + file.response.ImgUrl;
-             let index =  shopBannerImgUrl.indexOf(delUrl);
-             if(index > -1){
-                 shopBannerImgUrl.splice(index,1);
-             } 
+        delShopBanner(file, fileList) {
+            let delUrl = extend.imgPath + file.response.ImgUrl;
+            let index = shopBannerImgUrl.indexOf(delUrl);
+            if (index > -1) {
+                shopBannerImgUrl.splice(index, 1);
+            }
         },
 
-            changeEditor(data){
-                this.shopDetail = data;
-            },
+        changeEditor(data) {
+            this.shopDetail = data;
+        },
 
-         //添加商品
+        //添加商品
         onSubmit() {
             let self = this;
             let url = extend.rootPath + '/addShopInfo';
@@ -317,25 +339,26 @@ export default {
                 ShopTitle: self.shopTitle,
                 ShopPrice: self.shopPrice,
                 ShopBrandID: self.selectBrandID,
-                ShopDescribe:self.shopDetail,
-                ShopTypeID:self.selectType[0],
-                ShopSubTypeID:self.selectType[1],
-                IsIndexBanner:self.selectIndexBannerValue,
-                IsHot:self.selectHotValue,
-                IsNew:self.selectNewValue,
-                IndexImgUrl:self.indexImageUrl,
-                ShopBannerImgUrl:shopBannerImgUrl,
-                Attribute:self.selectAttrubuteArray,
-                AttributeValue:self.selectAttrubuteValueArray,
+                ShopDescribe: self.shopDetail,
+                ShopTypeID: self.selectType[0],
+                ShopSubTypeID: self.selectType[1],
+                IsIndexBanner: self.selectIndexBannerValue,
+                IsHot: self.selectHotValue,
+                IsNew: self.selectNewValue,
+                IndexImgUrl: self.indexImageUrl,
+                ShopCoverImgUrl:self.coverImgUrl,
+                ShopBannerImgUrl: shopBannerImgUrl,
+                Attribute: self.selectAttrubuteArray,
+                AttributeValue: self.selectAttrubuteValueArray,
 
             };
             self.$http.get(url, { params: data }).then(function (successRes) {
                 if (successRes.data.Code == 1) {
-                     this.$message({
+                    this.$message({
                         type: 'success',
                         message: '添加成功'
                     });
-                     this.$router.push({ path: '/ShopInfoManagement' });
+                    this.$router.push({ path: '/ShopInfoManagement' });
                 }
 
             }, function (failRes) {

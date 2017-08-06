@@ -7,7 +7,7 @@
                 
                 <el-breadcrumb class="breadcrumb">
                     <el-breadcrumb-item>商品管理</el-breadcrumb-item>
-                    <el-breadcrumb-item>商品信息管理</el-breadcrumb-item>
+                    <el-breadcrumb-item>商品列表管理</el-breadcrumb-item>
                 </el-breadcrumb>
     
                 <el-form :inline="true" class="top-form">
@@ -55,7 +55,7 @@
     
                     <el-table-column prop="shopPrice" label="商品价格" width="100"></el-table-column>
     
-                    <el-table-column prop="shopView" label="商品浏览量" width="100"></el-table-column>
+                    <el-table-column prop="shopViews" label="商品浏览量" width="100"></el-table-column>
     
                     <el-table-column prop="isIndexBanner" label="首页轮播" width="80"></el-table-column>
     
@@ -105,18 +105,7 @@ export default {
                     label: '否',
                     value: 'S0C'
                 }],
-            shopInfoList: [
-                {
-                    shopID: '0b65e5666a1d11e7ac077429af078194',
-                    shopTitle: '生生世世重中之重',
-                    shopPrice: 12.5,
-                    shopView: 100,
-                    isIndexBanner: '是',
-                    isNew: '是',
-                    isHot: '是',
-
-                }
-            ],
+            shopInfoList: [],
 
 
         }
