@@ -134,7 +134,7 @@ export default {
 
         //详情
         handleEdit(index, row) {
-
+             this.$router.push({ path: '/ShopInfoDetail?ShopID=' + row.shopID });
         },
         //删除
         handleDelete(index, row) {

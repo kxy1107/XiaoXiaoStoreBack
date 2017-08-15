@@ -18,19 +18,19 @@
                     </el-form-item>
     
                     <el-form-item label="商品标题：" :rules="[
-                                                                                    { required: true, message: '商品标题不能为空',trigger: 'blur' }
-                                                                                    ]">
+                                                                                        { required: true, message: '商品标题不能为空',trigger: 'blur' }
+                                                                                        ]">
                         <el-input v-model="shopTitle" placeholder="请输入商品标题"></el-input>
                     </el-form-item>
     
                     <el-form-item label="商品价格：" :rules="[
-                                                            { required: true, message: '年龄不能为空'}, { type: 'number', message: '年龄必须为数字值'}
-                                                                ]">
+                                                                { required: true, message: '年龄不能为空'}, { type: 'number', message: '年龄必须为数字值'}
+                                                                    ]">
                         <el-input class="shop-detail-price" value="number" v-model.number="shopPrice" placeholder="请输入商品价格"></el-input>
                     </el-form-item>
                     <el-form-item label="品牌：" :rules="[
-                                                                { required: true, message: '品牌不能为空',trigger: 'blur' }
-                                                                                    ]">
+                                                                    { required: true, message: '品牌不能为空',trigger: 'blur' }
+                                                                                        ]">
                         <el-select v-model="selectBrandID" placeholder="请选择品牌">
                             <el-option v-for="item in brandList" :key="item.brandID" :label="item.brandName" :value="item.brandID">
                             </el-option>
@@ -38,8 +38,8 @@
                     </el-form-item>
     
                     <el-form-item label="类型：" :rules="[
-                                                                { required: true, message: '类型不能为空',trigger: 'blur' }
-                                                                                    ]">
+                                                                    { required: true, message: '类型不能为空',trigger: 'blur' }
+                                                                                        ]">
                         <el-cascader expand-tigger="hover" :options="typeList" v-model="selectType">
                         </el-cascader>
                     </el-form-item>
@@ -168,11 +168,17 @@ export default {
         NavMenu
     },
     mounted: function () {
+        let sId = this.$route.params.ShopID;
         userNo = JSON.parse(sessionStorage.getItem('userInfo')).UserNo;
         this.getBrandList();
         this.getTypeSubTypeList();
         this.getAttributeList();
         this.getAttributeValueList();
+        if (sId == "" || sId == null || typeof (sId) == "undefined") {
+            this.shopID = "";
+        } else {
+            this.shopID = sId;
+        }
     },
 
     methods: {
@@ -180,6 +186,32 @@ export default {
         onClickReturn() {
             this.$router.go(-1)
         },
+        getShopDetail() {
+            let self = this;
+            let url = extend.rootPath + '/getShopInfoDetail';
+            let data = {
+                UserNo: userNo,
+                ShopID: self.shopID
+
+            };
+            self.$http.get(url, { params: data }).then(
+                function (successRes) {
+                    if (successRes.data.Code == 1) {
+                        let shopInfo = successRes.data.ShopInfoList;
+                        self.shopTitle = shopInfo.shopTitle;
+                        self.shopPrice = shopInfo.shopPrice;
+                        self.selectHotValue = shopInfo.isHot;
+                        self.selectNewValue = shopInfo.isNew;
+                        self.selectBrandID = shopInfo.brandID;
+                        self.selectType = [shopInfo.shopTypeID,shopInfo.shopSubTypeID];
+                    }
+                },
+                function (failRes) {
+
+                });
+        },
+
+
         //获取品牌列表
         getBrandList() {
             let self = this;
@@ -304,7 +336,7 @@ export default {
             this.coverImgUrl = extend.imgPath + res.ImgUrl;
         },
 
-          // 删除商品封面图
+        // 删除商品封面图
         delCoverPic() {
             this.coverImgUrl = "";
         },
@@ -346,7 +378,7 @@ export default {
                 IsHot: self.selectHotValue,
                 IsNew: self.selectNewValue,
                 IndexImgUrl: self.indexImageUrl,
-                ShopCoverImgUrl:self.coverImgUrl,
+                ShopCoverImgUrl: self.coverImgUrl,
                 ShopBannerImgUrl: shopBannerImgUrl,
                 Attribute: self.selectAttrubuteArray,
                 AttributeValue: self.selectAttrubuteValueArray,
