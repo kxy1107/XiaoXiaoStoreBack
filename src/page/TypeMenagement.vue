@@ -13,7 +13,7 @@
                 <!--顶部搜索-->
                 <el-form :inline="true" class="top-form">
                     <el-form-item>
-                        <el-button type="primary" @click="dialogAddType = true">添加新类型</el-button>
+                        <el-button type="primary" @click="addNewType">添加新类型</el-button>
                     </el-form-item>
                     <el-form-item>
                         <el-input v-model="inputTypeName" placeholder="请输入类型名"></el-input>
@@ -34,6 +34,12 @@
                     </el-table-column>
                     <el-table-column prop="typeName" label="类型名称">
                     </el-table-column>
+                    <el-table-column label="类型图标">
+                        <template scope="scope">
+                           <img class="type-icon-img" :src= "scope.row.typeIcon"/>
+                           
+                        </template>
+                    </el-table-column>
                 </el-table>
                 <!--底部分页-->
                 <div class="pagination">
@@ -46,6 +52,16 @@
                     <el-form>
                         <el-form-item label="类型名称">
                             <el-input v-model="addTypeName" auto-complete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="类型图标：">
+                            <div class="shop-detail-index-banner">
+                                <el-upload :before-upload="beforeAvatarUpload" class="avatar-uploader" action="http://localhost:8028/pc/uploadBanner" :show-file-list="false" :on-success="uploadIconImage">
+                                    <img v-if="typeIconImg" :src="typeIconImg" class="avatar">
+                                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                                </el-upload>
+    
+                                <el-button v-if="typeIconImg != ''" @click="delIconPic" type="danger" class="shop-detail-btn-del-index-banner">删除</el-button>
+                            </div>
                         </el-form-item>
                     </el-form>
                     <div slot="footer" class="dialog-footer">
@@ -62,6 +78,16 @@
                         </el-form-item>
                         <el-form-item label="类型名称">
                             <el-input v-model="updateTypeName" auto-complete="off"></el-input>
+                        </el-form-item>
+                         <el-form-item label="类型图标：">
+                            <div class="shop-detail-index-banner">
+                                <el-upload :before-upload="beforeAvatarUpload" class="avatar-uploader" action="http://localhost:8028/pc/uploadBanner" :show-file-list="false" :on-success="uploadIconImage">
+                                    <img v-if="typeIconImg" :src="typeIconImg" class="avatar">
+                                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                                </el-upload>
+    
+                                <el-button v-if="typeIconImg != ''" @click="delIconPic" type="danger" class="shop-detail-btn-del-index-banner">删除</el-button>
+                            </div>
                         </el-form-item>
                     </el-form>
                     <div slot="footer" class="dialog-footer">
@@ -98,6 +124,7 @@ export default {
             updateTypeID: "",
             updateTypeName: "",
             totalCount: 0,
+            typeIconImg: "",//商品图标
             typeList: []
         }
     },
@@ -114,12 +141,21 @@ export default {
             this.pageIndex = (this.currentPage - 1) * this.pageSize;
             this.getTypeList();
         },
+        addNewType(){
+            this.addTypeName = "";
+            this.typeIconImg = "";
+            this.dialogAddType = true;
+
+        },
+
+
         //点击编辑
         handleEdit(index, row) {
 
             this.isUpdateType = true;
             this.updateTypeID = row.typeID;
             this.updateTypeName = row.typeName;
+            this.typeIconImg = row.typeIcon;
 
         },
         //点击删除
@@ -167,7 +203,8 @@ export default {
             let data = {
                 UserNo: userNo,
                 TypeID: '',
-                TypeName: this.addTypeName
+                TypeName: self.addTypeName,
+                TypeIcon: self.typeIconImg
 
             };
             self.$http.get(url, { params: data }).then(function (successRes) {
@@ -193,7 +230,8 @@ export default {
             let data = {
                 UserNo: userNo,
                 TypeID: self.updateTypeID,
-                TypeName: self.updateTypeName
+                TypeName: self.updateTypeName,
+                TypeIcon: self.typeIconImg
 
             };
             self.$http.get(url, { params: data }).then(function (successRes) {
@@ -235,9 +273,19 @@ export default {
             });
         },
 
+        //上传类型图标成功时
+        uploadIconImage(res, file) {
+            console.log(res);
+            this.typeIconImg = extend.imgPath + res.ImgUrl;
+        },
 
-
+        // 删除类型图标
+        delIconPic() {
+            this.typeIconImg = "";
+        },
     },
+
+
 
 }
 </script>
@@ -254,5 +302,48 @@ export default {
     width: 100%;
     overflow-x: hidden;
     box-sizing: border-box;
+}
+
+.avatar-uploader {
+    min-width: 178px;
+    border: 1px dashed #c3c3c3;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.avatar-uploade:hover {
+    border-color: red;
+}
+
+.avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    min-width: 178px;
+    min-height: 178px;
+    line-height: 178px;
+    text-align: center;
+}
+
+.avatar {
+    min-width: 178px;
+    min-height: 178px;
+    display: block;
+}
+
+.shop-detail-index-banner {
+    display: flex;
+    align-items: center;
+}
+
+.shop-detail-btn-del-index-banner {
+    margin: 20px;
+    width: 100px;
+    height: 50px;
+}
+.type-icon-img{
+    width: 40px;
+    height: 40px;
 }
 </style>

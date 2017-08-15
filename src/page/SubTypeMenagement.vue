@@ -38,6 +38,12 @@
                     </el-table-column>
                     <el-table-column prop="subTypeName" label="子类型名称">
                     </el-table-column>
+                     <el-table-column label="子类型图标">
+                        <template scope="scope">
+                           <img class="type-icon-img" :src= "scope.row.subTypeIcon"/>
+                           
+                        </template>
+                    </el-table-column>
                 </el-table>
                 <!--底部分页-->
                 <div class="pagination">
@@ -56,6 +62,16 @@
                         </el-form-item>
                         <el-form-item label="子类型名称">
                             <el-input v-model="addSubTypeName" auto-complete="off"></el-input>
+                        </el-form-item>
+                         <el-form-item label="子类型图标：">
+                            <div class="shop-detail-index-banner">
+                                <el-upload :before-upload="beforeAvatarUpload" class="avatar-uploader" action="http://localhost:8028/pc/uploadBanner" :show-file-list="false" :on-success="uploadIconImage">
+                                    <img v-if="subTypeIconImg" :src="subTypeIconImg" class="avatar">
+                                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                                </el-upload>
+    
+                                <el-button v-if="subTypeIconImg != ''" @click="delIconPic" type="danger" class="shop-detail-btn-del-index-banner">删除</el-button>
+                            </div>
                         </el-form-item>
                     </el-form>
                     <div slot="footer" class="dialog-footer">
@@ -78,6 +94,16 @@
                         </el-form-item>
                         <el-form-item label="子类型名称">
                             <el-input v-model="updateSubTypeName" auto-complete="off"></el-input>
+                        </el-form-item>
+                         <el-form-item label="子类型图标：">
+                            <div class="shop-detail-index-banner">
+                                <el-upload :before-upload="beforeAvatarUpload" class="avatar-uploader" action="http://localhost:8028/pc/uploadBanner" :show-file-list="false" :on-success="uploadIconImage">
+                                    <img v-if="subTypeIconImg" :src="subTypeIconImg" class="avatar">
+                                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                                </el-upload>
+    
+                                <el-button v-if="subTypeIconImg != ''" @click="delIconPic" type="danger" class="shop-detail-btn-del-index-banner">删除</el-button>
+                            </div>
                         </el-form-item>
                     </el-form>
                     <div slot="footer" class="dialog-footer">
@@ -115,6 +141,7 @@ export default {
             updateSubTypeName: "",
             selectType: "",
             options: [],
+            subTypeIconImg: "",//类型子图标
             totalCount: 0,
             subTypeList: []
         }
@@ -139,6 +166,7 @@ export default {
             this.updateSubTypeID = row.subTypeID;
             this.updateSubTypeName = row.subTypeName;
             this.selectType = row.typeID;
+            this.subTypeIconImg = row.subTypeIcon;
 
         },
         //点击删除
@@ -178,7 +206,7 @@ export default {
 
 
 
-        //添加品牌弹窗确认按钮
+        //添加子类型弹窗确认按钮
         addSubTypeConfirm() {
             let self = this;
             let url = extend.rootPath + '/addSubType';
@@ -186,7 +214,8 @@ export default {
                 UserNo: userNo,
                 TypeID: this.selectType,
                 SubTypeID: '',
-                SubTypeName: this.addSubTypeName
+                SubTypeName: this.addSubTypeName,
+                SubTypeIcon: this.subTypeIconImg
 
             };
             self.$http.get(url, { params: data }).then(function (successRes) {
@@ -213,7 +242,8 @@ export default {
                 UserNo: userNo,
                 TypeID: this.selectType,
                 SubTypeID: self.updateSubTypeID,
-                SubTypeName: self.updateSubTypeName
+                SubTypeName: self.updateSubTypeName,
+                SubTypeIcon: this.subTypeIconImg
 
             };
             self.$http.get(url, { params: data }).then(function (successRes) {
@@ -276,6 +306,16 @@ export default {
 
             });
         },
+           //上传类型图标成功时
+        uploadIconImage(res, file) {
+            console.log(res);
+            this.subTypeIconImg = extend.imgPath + res.ImgUrl;
+        },
+
+        // 删除类型图标
+        delIconPic() {
+            this.subTypeIconImg = "";
+        },
 
     }
 }
@@ -293,5 +333,47 @@ export default {
     width: 100%;
     overflow-x: hidden;
     box-sizing: border-box;
+}
+.avatar-uploader {
+    min-width: 178px;
+    border: 1px dashed #c3c3c3;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.avatar-uploade:hover {
+    border-color: red;
+}
+
+.avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    min-width: 178px;
+    min-height: 178px;
+    line-height: 178px;
+    text-align: center;
+}
+
+.avatar {
+    min-width: 178px;
+    min-height: 178px;
+    display: block;
+}
+
+.shop-detail-index-banner {
+    display: flex;
+    align-items: center;
+}
+
+.shop-detail-btn-del-index-banner {
+    margin: 20px;
+    width: 100px;
+    height: 50px;
+}
+.type-icon-img{
+    width: 40px;
+    height: 40px;
 }
 </style>
