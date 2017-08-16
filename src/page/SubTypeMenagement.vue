@@ -65,7 +65,7 @@
                         </el-form-item>
                          <el-form-item label="子类型图标：">
                             <div class="shop-detail-index-banner">
-                                <el-upload :before-upload="beforeAvatarUpload" class="avatar-uploader" action="http://localhost:8028/pc/uploadBanner" :show-file-list="false" :on-success="uploadIconImage">
+                                <el-upload  class="avatar-uploader" action="http://localhost:8028/pc/uploadBanner" :show-file-list="false" :on-success="uploadIconImage">
                                     <img v-if="subTypeIconImg" :src="subTypeIconImg" class="avatar">
                                     <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                                 </el-upload>
@@ -97,7 +97,7 @@
                         </el-form-item>
                          <el-form-item label="子类型图标：">
                             <div class="shop-detail-index-banner">
-                                <el-upload :before-upload="beforeAvatarUpload" class="avatar-uploader" action="http://localhost:8028/pc/uploadBanner" :show-file-list="false" :on-success="uploadIconImage">
+                                <el-upload class="avatar-uploader" action="http://localhost:8028/pc/uploadBanner" :show-file-list="false" :on-success="uploadIconImage">
                                     <img v-if="subTypeIconImg" :src="subTypeIconImg" class="avatar">
                                     <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                                 </el-upload>
