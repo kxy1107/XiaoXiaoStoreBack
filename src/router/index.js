@@ -2,7 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Login from '@/page/Login'
 import UserInfo from '@/page/UserInfo'
-import BrandMenagement from '@/page/BrandMenagement'
+// import BrandMenagement from '@/page/BrandMenagement'
+import ConnectManagement from '@/page/ConnectManagement'
 import TypeMenagement from '@/page/TypeMenagement'
 import SubTypeMenagement from '@/page/SubTypeMenagement'
 import AttributeManagement from '@/page/AttributeManagement'
@@ -25,10 +26,15 @@ export default new Router({
       name: 'UserInfo',
       component: UserInfo
     },
+    // {
+    //   path: '/BrandMenagement',
+    //   name: 'BrandMenagement',
+    //   component: BrandMenagement
+    // },
     {
-      path: '/BrandMenagement',
-      name: 'BrandMenagement',
-      component: BrandMenagement
+      path: '/ConnectManagement',
+      name: 'ConnectManagement',
+      component: ConnectManagement
     },
     {
       path: '/TypeMenagement',

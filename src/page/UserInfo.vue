@@ -9,54 +9,59 @@
           <el-breadcrumb-item>用户管理</el-breadcrumb-item>
           <el-breadcrumb-item>用户列表</el-breadcrumb-item>
         </el-breadcrumb>
-  
+
         <!--顶部搜索-->
-        <el-form :inline="true" :model="formUserInfo" class="top-form">
+        <el-form :inline="true" class="top-form">
           <el-form-item>
-            <el-input v-model="formUserInfo.userName" placeholder="请输入用户名"></el-input>
+            <el-input v-model="txtUserName" placeholder="请输入用户名"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onClickSearch">查询</el-button>
           </el-form-item>
         </el-form>
         <!--表格-->
-        <el-table :data="userInfoData" class="my-table" height="100">
-  
-          <el-table-column prop="userName" label="姓名">
+        <el-table :data="userList" class="my-table" height="100">
+
+          <el-table-column prop="UserName" label="姓名">
           </el-table-column>
-  
-          <el-table-column prop="userSex" label="性别">
-          </el-table-column>
-  
-          <el-table-column label="头像">
+
+          <el-table-column prop="UserGender" label="性别">
             <template scope="scope">
-              <img class="headImg" :src="scope.row.userImg">
+              {{scope.row.UserGender == 1 ? "男" : "女"}}
             </template>
           </el-table-column>
-  
+
+          <el-table-column label="头像">
+            <template scope="scope">
+              <img class="headImg" :src="scope.row.UserImg">
+            </template>
+          </el-table-column>
+
           <el-table-column prop="UserCity" label="城市">
           </el-table-column>
-  
-          <el-table-column prop="userRegisterTime" label="注册时间">
+
+          <el-table-column prop="RegisterTime" label="注册时间">
           </el-table-column>
-  
+
           <el-table-column prop="LastLoginTime" label="最后登录时间">
           </el-table-column>
         </el-table>
         <!--底部分页-->
         <div class="pagination">
-          <el-pagination @current-change="handleCurrentChange" :current-page="1" :page-size="10" layout="total, prev, pager, next, jumper" :total="400">
+          <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="10" layout="total, prev, pager, next, jumper" :total="totalCount">
           </el-pagination>
         </div>
-  
+
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import extend from '@/extend.js'
 import HeadBar from '@/components/HeadBar'
 import NavMenu from '@/components/NavMenu'
+let userNo;
 export default {
   name: 'UserInfo',
   components: {
@@ -65,166 +70,52 @@ export default {
   },
   data() {
     return {
-      formUserInfo: {
-        userName: "",
-      },
-      totalCount:0,
-      userInfoData: [
-        {
-          userName: "小王",
-          userImg: "http://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83ep4qrJiaLrkTib8Kib5h3qZBEbvCP5JZURSic9I2AHKJl6eLPdcAZDCxs0z3mxS8nia4Waty9wiam5wnh9A/0",
-          userSex: "男",
-          UserCity: "福州",
-          userRegisterTime: "2017-6-27",
-          LastLoginTime: "2017-7-5"
-        },
-        {
-          userName: "小王",
-          userImg: "http://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83ep4qrJiaLrkTib8Kib5h3qZBEbvCP5JZURSic9I2AHKJl6eLPdcAZDCxs0z3mxS8nia4Waty9wiam5wnh9A/0",
-          userSex: "男",
-          UserCity: "福州",
-          userRegisterTime: "2017-6-27",
-          LastLoginTime: "2017-7-5"
-        },
-        {
-          userName: "小王",
-          userImg: "http://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83ep4qrJiaLrkTib8Kib5h3qZBEbvCP5JZURSic9I2AHKJl6eLPdcAZDCxs0z3mxS8nia4Waty9wiam5wnh9A/0",
-          userSex: "男",
-          UserCity: "福州",
-          userRegisterTime: "2017-6-27",
-          LastLoginTime: "2017-7-5"
-        },
-        {
-          userName: "小王",
-          userImg: "",
-          userSex: "男",
-          UserCity: "福州",
-          userRegisterTime: "2017-6-27",
-          LastLoginTime: "2017-7-5"
-        },
-        {
-          userName: "小王",
-          userImg: "",
-          userSex: "男",
-          UserCity: "福州",
-          userRegisterTime: "2017-6-27",
-          LastLoginTime: "2017-7-5"
-        },
-        {
-          userName: "小王",
-          userImg: "",
-          userSex: "男",
-          UserCity: "福州",
-          userRegisterTime: "2017-6-27",
-          LastLoginTime: "2017-7-5"
-        },
-        {
-          userName: "小王",
-          userImg: "",
-          userSex: "男",
-          UserCity: "福州",
-          userRegisterTime: "2017-6-27",
-          LastLoginTime: "2017-7-5"
-        },
-        {
-          userName: "小王",
-          userImg: "",
-          userSex: "男",
-          UserCity: "福州",
-          userRegisterTime: "2017-6-27",
-          LastLoginTime: "2017-7-5"
-        },
-        {
-          userName: "小王",
-          userImg: "",
-          userSex: "男",
-          UserCity: "福州",
-          userRegisterTime: "2017-6-27",
-          LastLoginTime: "2017-7-5"
-        },
-        {
-          userName: "小王",
-          userImg: "",
-          userSex: "男",
-          UserCity: "福州",
-          userRegisterTime: "2017-6-27",
-          LastLoginTime: "2017-7-5"
-        },
-        {
-          userName: "小王",
-          userImg: "",
-          userSex: "男",
-          UserCity: "福州",
-          userRegisterTime: "2017-6-27",
-          LastLoginTime: "2017-7-5"
-        },
-        {
-          userName: "小王",
-          userImg: "",
-          userSex: "男",
-          UserCity: "福州",
-          userRegisterTime: "2017-6-27",
-          LastLoginTime: "2017-7-5"
-        },
-        {
-          userName: "小王",
-          userImg: "",
-          userSex: "男",
-          UserCity: "福州",
-          userRegisterTime: "2017-6-27",
-          LastLoginTime: "2017-7-5"
-        },
-        {
-          userName: "小王",
-          userImg: "",
-          userSex: "男",
-          UserCity: "福州",
-          userRegisterTime: "2017-6-27",
-          LastLoginTime: "2017-7-5"
-        },
-        {
-          userName: "小王",
-          userImg: "",
-          userSex: "男",
-          UserCity: "福州",
-          userRegisterTime: "2017-6-27",
-          LastLoginTime: "2017-7-5"
-        },
-        {
-          userName: "小王",
-          userImg: "",
-          userSex: "男",
-          UserCity: "福州",
-          userRegisterTime: "2017-6-27",
-          LastLoginTime: "2017-7-5"
-        },
-        {
-          userName: "小王",
-          userImg: "",
-          userSex: "男",
-          UserCity: "福州",
-          userRegisterTime: "2017-6-27",
-          LastLoginTime: "2017-7-5"
-        },
-        {
-          userName: "小王",
-          userImg: "",
-          userSex: "男",
-          UserCity: "福州",
-          userRegisterTime: "2017-6-27",
-          LastLoginTime: "2017-7-5"
-        },
-      ]
+      txtUserName: "",
+      currentPage: 1,
+      pageIndex: 0,
+      pageSize: 10,
+      totalCount: 0,
+      userList: [],
+
     }
+  },
+  mounted: function() {
+    userNo = JSON.parse(sessionStorage.getItem('userInfo')).UserNo;
+    this.getUserList()
   },
   methods: {
     //点击查询
     onClickSearch() {
+      this.getUserList()
+    },
+
+    handleCurrentChange(val) {
+      this.pageIndex = (this.currentPage - 1) * this.pageSize;
+      this.getBrandList()
 
     },
-    handleCurrentChange(val) {
 
-    }
+    //获取用户列表
+    getUserList() {
+      let self = this;
+      let url = extend.rootPath + '/getUserList';
+      let data = {
+        UserNo: userNo,
+        BrandName: this.txtUserName,
+        PageIndex: this.pageIndex,
+        PageSize: this.pageSize
+
+      };
+      self.$http.get(url, { params: data }).then(function(successRes) {
+        if (successRes.data.Code == 1) {
+          self.totalCount = successRes.data.TotalCount;
+          self.userList = successRes.data.UserList;
+        }
+
+      }, function(failRes) {
+
+      });
+    },
   }
 }
 </script>

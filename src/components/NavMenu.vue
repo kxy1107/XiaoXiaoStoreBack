@@ -8,7 +8,8 @@
                     </el-submenu>
                      <el-submenu index="2">
                         <template slot="title">商品管理</template>
-                            <el-menu-item index="/BrandMenagement" >品牌管理</el-menu-item>
+                            <!-- <el-menu-item index="/BrandMenagement" >品牌管理</el-menu-item> -->
+                             <el-menu-item index="/ConnectManagement" >联系方式管理</el-menu-item>
                             <el-menu-item index="/TypeMenagement" >类型管理</el-menu-item>
                             <el-menu-item index="/SubTypeMenagement">子类型管理</el-menu-item>
                             <el-menu-item index="/AttributeManagement">属性管理</el-menu-item>
