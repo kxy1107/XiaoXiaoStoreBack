@@ -16,7 +16,7 @@
                             <el-menu-item index="/AttributeValueManagement">属性值管理</el-menu-item>
                             <el-menu-item index="/ShopInfoManagement">商品列表管理</el-menu-item>
                     </el-submenu>
-                    <el-menu-item index="3">导航三</el-menu-item>
+                   
                 </el-menu>
             </el-col>
         </el-row>

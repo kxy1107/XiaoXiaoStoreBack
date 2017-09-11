@@ -69,7 +69,7 @@
                     <el-form-item v-if="selectIndexBannerValue == 'S0A'" label="首页轮播图：">
 
                         <div class="shop-detail-index-banner">
-                            <el-upload :before-upload="beforeAvatarUpload" class="avatar-uploader" action="http://localhost:8028/pc/uploadBanner" :show-file-list="false" :on-success="uploadIndexBanner">
+                            <el-upload :before-upload="beforeAvatarUpload" class="avatar-uploader" action="https://afsc.jianyuejizhang.cn/pc/uploadBanner" :show-file-list="false" :on-success="uploadIndexBanner">
                                 <img v-if="indexImageUrl" :src="indexImageUrl" class="avatar">
                                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                             </el-upload>
@@ -81,7 +81,7 @@
                     <el-form-item label="商品封面图：">
 
                         <div class="shop-detail-index-banner">
-                            <el-upload :before-upload="beforeAvatarUpload" show-file-list="true" class="avatar-uploader" action="http://localhost:8028/pc/uploadBanner" :show-file-list="false" :on-success="uploadCoverImage">
+                            <el-upload :before-upload="beforeAvatarUpload" show-file-list="true" class="avatar-uploader" action="https://afsc.jianyuejizhang.cn/pc/uploadBanner" :show-file-list="false" :on-success="uploadCoverImage">
                                 <img v-if="coverImgUrl" :src="coverImgUrl" class="avatar">
                                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                             </el-upload>
@@ -91,7 +91,7 @@
                     </el-form-item>
 
                     <el-form-item label="商品轮播图：">
-                        <el-upload action="http://localhost:8028/pc/uploadBanner" multiple list-type="picture-card" :on-success="uploadShopBanner" :on-remove="delShopBanner">
+                        <el-upload action="https://afsc.jianyuejizhang.cn/pc/uploadBanner" multiple list-type="picture-card" :on-success="uploadShopBanner" :on-remove="delShopBanner">
                             <i class="el-icon-plus"></i>
                         </el-upload>
                     </el-form-item>

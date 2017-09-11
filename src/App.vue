@@ -15,6 +15,6 @@ export default {
 <style scoped>
 
 
-@import url("/static/common.css");
+@import url("/static/css/common.css");
 @import url("/static/css/font-awesome.css");
 </style>

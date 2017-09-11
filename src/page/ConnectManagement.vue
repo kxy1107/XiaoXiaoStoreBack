@@ -31,7 +31,7 @@
 
                     <el-form-item label="微信二维码">
                         <div class="shop-detail-index-banner">
-                            <el-upload :before-upload="beforeAvatarUpload" class="avatar-uploader" action="http://localhost:8028/pc/uploadBanner" :show-file-list="false" :on-success="uploadQrCode" :disabled="!canEdit">
+                            <el-upload :before-upload="beforeAvatarUpload" class="avatar-uploader" action="https://afsc.jianyuejizhang.cn/pc/uploadBanner" :show-file-list="false" :on-success="uploadQrCode" :disabled="!canEdit">
                                 <img v-if="wechatQrCodeUrl" :src="wechatQrCodeUrl" class="avatar">
                                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                             </el-upload>

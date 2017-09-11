@@ -1,5 +1,7 @@
-let rootPath = 'http://localhost:8028/pc';
-let imgPath = 'http://localhost:8028/';
+let rootPath = 'https://afsc.jianyuejizhang.cn/pc';
+let imgPath = 'https://afsc.jianyuejizhang.cn/';
+//  let rootPath = 'http://localhost:8028/pc';
+//  let imgPath = 'http://localhost:8028/';
 function setCookie(cname, cvalue, exdays) {
     var d = new Date();
     d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
