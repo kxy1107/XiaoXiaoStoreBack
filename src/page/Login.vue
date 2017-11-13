@@ -48,6 +48,11 @@ export default {
                             let userInfo =  JSON.stringify(successRes.data.UserInfo);
                             sessionStorage.setItem("userInfo", userInfo);	
                             this.$router.push({ path: '/UserInfo' });
+                        }else{
+                             self.isRemember();
+                             let userInfo =  JSON.stringify(successRes.data.UserInfo);
+                            sessionStorage.setItem("userInfo", userInfo);	
+                            this.$router.push({ path: '/AdminShoperManage' });
                         }
                        
                     }, function (failRes) {

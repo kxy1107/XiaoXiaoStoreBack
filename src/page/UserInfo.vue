@@ -91,7 +91,7 @@ export default {
 
     handleCurrentChange(val) {
       this.pageIndex = (this.currentPage - 1) * this.pageSize;
-      this.getBrandList()
+      this.getUserList()
 
     },
 
@@ -101,7 +101,7 @@ export default {
       let url = extend.rootPath + '/getUserList';
       let data = {
         UserNo: userNo,
-        BrandName: this.txtUserName,
+        UserName: this.txtUserName,
         PageIndex: this.pageIndex,
         PageSize: this.pageSize
 

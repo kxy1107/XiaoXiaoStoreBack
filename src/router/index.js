@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Login from '@/page/Login'
 import UserInfo from '@/page/UserInfo'
-// import BrandMenagement from '@/page/BrandMenagement'
+import AdminShoperManage from '@/page/AdminShoperManage'
 import ConnectManagement from '@/page/ConnectManagement'
 import TypeMenagement from '@/page/TypeMenagement'
 import SubTypeMenagement from '@/page/SubTypeMenagement'
@@ -25,6 +25,11 @@ export default new Router({
       path: '/UserInfo',
       name: 'UserInfo',
       component: UserInfo
+    },
+    {
+      path: '/AdminShoperManage',
+      name: 'AdminShoperManage',
+      component: AdminShoperManage
     },
     // {
     //   path: '/BrandMenagement',
